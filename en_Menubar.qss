@@ -1,0 +1,20 @@
+QMenuBar{
+    background-color:rgb(225,225,225);
+    border-bottom:2px outset rgb(180,180,180);
+    width:45px;
+    min-height:20px;
+    font-size:12px;
+}
+
+QMenuBar::item:selected{
+    background-color:rgb(100,100,100);
+    color:white;
+}
+
+QMenu::item:select{
+    color:black;
+}
+
+QMen::item:pressed{
+    background-color:rgb(0,162,232);
+}

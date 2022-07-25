@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/qss">
+        <file>Menubar.qss</file>
+        <file>en_Menubar.qss</file>
+    </qresource>
+    <qresource prefix="/language">
+        <file>language_cn.qm</file>
+        <file>language_en.qm</file>
+        <file>language_tra_cn.qm</file>
+    </qresource>
+</RCC>

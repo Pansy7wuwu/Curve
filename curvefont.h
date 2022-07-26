@@ -32,8 +32,8 @@ public:
     QVector<double> min,max;
     QColor* color;
     QCPItemTracer* tracer;
-    QButtonGroup curveName;
-    QButtonGroup btnColor;
+    QButtonGroup* curveName;
+    QButtonGroup* btnColor;
     QVector<QLineEdit*> editData,editTime;
 
     void closeEvent(QCloseEvent* event);

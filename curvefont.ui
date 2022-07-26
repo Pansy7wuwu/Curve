@@ -14,19 +14,1008 @@
    <string>CurveFont</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>761</width>
-      <height>331</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>-1</number>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="Curve_Info">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>220</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="All">
+       <attribute name="title">
+        <string>All</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="4" column="0" colspan="4">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>498</width>
+             <height>510</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>510</height>
+            </size>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="17" column="3">
+             <widget class="QPushButton" name="color_13">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QCheckBox" name="checkBox_5">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="2">
+             <widget class="QLineEdit" name="lineEdit_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="19" column="2">
+             <widget class="QLineEdit" name="lineEdit_15">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QLineEdit" name="lineEdit_4">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QCheckBox" name="checkBox_7">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QCheckBox" name="checkBox_4">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="2">
+             <widget class="QLineEdit" name="lineEdit_13">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QLineEdit" name="lineEdit_5">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="3">
+             <widget class="QPushButton" name="color_8">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="3">
+             <widget class="QPushButton" name="color_4">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="5">
+             <widget class="QLineEdit" name="Time_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="3">
+             <widget class="QPushButton" name="color_14">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QPushButton" name="color_3">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QCheckBox" name="checkBox_6">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="5">
+             <widget class="QLineEdit" name="Time_7">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="5">
+             <widget class="QLineEdit" name="Time_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QPushButton" name="color_2">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="5">
+             <widget class="QLineEdit" name="Time_4">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="2">
+             <widget class="QLineEdit" name="lineEdit_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="3">
+             <widget class="QPushButton" name="color_9">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="2">
+             <widget class="QLineEdit" name="lineEdit_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="19" column="5">
+             <widget class="QLineEdit" name="Time_15">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0">
+             <widget class="QCheckBox" name="checkBox_10">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="3">
+             <widget class="QPushButton" name="color_12">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLineEdit" name="lineEdit_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="0">
+             <widget class="QCheckBox" name="checkBox_16">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QLineEdit" name="Time_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="5">
+             <widget class="QLineEdit" name="Time_8">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="22" column="5">
+             <widget class="QLineEdit" name="Time_17">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="0">
+             <widget class="QCheckBox" name="checkBox_14">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QLineEdit" name="Time_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="0">
+             <widget class="QCheckBox" name="checkBox_13">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="3">
+             <widget class="QPushButton" name="color_16">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="0">
+             <widget class="QCheckBox" name="checkBox_11">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="5">
+             <widget class="QLineEdit" name="Time_13">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="22" column="3">
+             <widget class="QPushButton" name="color_17">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="22" column="0">
+             <widget class="QCheckBox" name="checkBox_17">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="5">
+             <widget class="QLineEdit" name="Time_12">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="3">
+             <widget class="QPushButton" name="color_7">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="2">
+             <widget class="QLineEdit" name="lineEdit_16">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLineEdit" name="lineEdit_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="5">
+             <widget class="QLineEdit" name="Time_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QCheckBox" name="checkBox_8">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="5">
+             <widget class="QLineEdit" name="Time_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QPushButton" name="color_5">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="5">
+             <widget class="QLineEdit" name="Time_5">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="2">
+             <widget class="QLineEdit" name="lineEdit_8">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="0">
+             <widget class="QCheckBox" name="checkBox_12">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="19" column="0">
+             <widget class="QCheckBox" name="checkBox_15">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QCheckBox" name="checkBox_3">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="5">
+             <widget class="QLineEdit" name="Time_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="19" column="3">
+             <widget class="QPushButton" name="color_15">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="3">
+             <widget class="QPushButton" name="color_10">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="checkBox_1">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="5">
+             <widget class="QLineEdit" name="Time_14">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="3">
+             <widget class="QPushButton" name="color_11">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QLineEdit" name="lineEdit_7">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="3">
+             <widget class="QPushButton" name="color_6">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="2">
+             <widget class="QLineEdit" name="lineEdit_12">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="2">
+             <widget class="QLineEdit" name="lineEdit_14">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="22" column="2">
+             <widget class="QLineEdit" name="lineEdit_17">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="checkBox_2">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="2">
+             <widget class="QLineEdit" name="lineEdit_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="5">
+             <widget class="QLineEdit" name="Time_16">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="color_1">
+              <property name="minimumSize">
+               <size>
+                <width>140</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="0">
+             <widget class="QCheckBox" name="checkBox_9">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CheckBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="lineEdit_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelName">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>       曲线名</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="labelData">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>            数值</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLabel" name="labelColor">
+          <property name="text">
+           <string>                    颜色</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="labelTime">
+          <property name="text">
+           <string>              时间</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

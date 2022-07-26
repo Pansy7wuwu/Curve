@@ -70,6 +70,87 @@ CurveFont::CurveFont(QWidget *parent)
     QCustomPlot* Page = new QCustomPlot();
     ui->tabWidget->addTab(Page,"Curve 1");
     numOfPage = 1;
+
+    curveName.addButton(ui->checkBox_1);
+    curveName.addButton(ui->checkBox_2);
+    curveName.addButton(ui->checkBox_3);
+    curveName.addButton(ui->checkBox_4);
+    curveName.addButton(ui->checkBox_5);
+    curveName.addButton(ui->checkBox_6);
+    curveName.addButton(ui->checkBox_7);
+    curveName.addButton(ui->checkBox_8);
+    curveName.addButton(ui->checkBox_9);
+    curveName.addButton(ui->checkBox_10);
+    curveName.addButton(ui->checkBox_11);
+    curveName.addButton(ui->checkBox_12);
+    curveName.addButton(ui->checkBox_13);
+    curveName.addButton(ui->checkBox_14);
+    curveName.addButton(ui->checkBox_15);
+    curveName.addButton(ui->checkBox_16);
+    curveName.addButton(ui->checkBox_17);
+    btnColor.addButton(ui->color_1);
+    btnColor.addButton(ui->color_2);
+    btnColor.addButton(ui->color_3);
+    btnColor.addButton(ui->color_4);
+    btnColor.addButton(ui->color_5);
+    btnColor.addButton(ui->color_6);
+    btnColor.addButton(ui->color_7);
+    btnColor.addButton(ui->color_8);
+    btnColor.addButton(ui->color_9);
+    btnColor.addButton(ui->color_10);
+    btnColor.addButton(ui->color_11);
+    btnColor.addButton(ui->color_12);
+    btnColor.addButton(ui->color_13);
+    btnColor.addButton(ui->color_14);
+    btnColor.addButton(ui->color_15);
+    btnColor.addButton(ui->color_16);
+    btnColor.addButton(ui->color_17);
+    editData.resize(17);
+    editTime.resize(17);
+    editData[0] = ui->lineEdit_1;
+    editData[1] = ui->lineEdit_2;
+    editData[2] = ui->lineEdit_3;
+    editData[3] = ui->lineEdit_4;
+    editData[4] = ui->lineEdit_5;
+    editData[5] = ui->lineEdit_6;
+    editData[6] = ui->lineEdit_7;
+    editData[7] = ui->lineEdit_8;
+    editData[8] = ui->lineEdit_9;
+    editData[9] = ui->lineEdit_10;
+    editData[10] = ui->lineEdit_11;
+    editData[11] = ui->lineEdit_12;
+    editData[12] = ui->lineEdit_13;
+    editData[13] = ui->lineEdit_14;
+    editData[14] = ui->lineEdit_15;
+    editData[15] = ui->lineEdit_16;
+    editData[16] = ui->lineEdit_17;
+    editTime[0] = ui->Time_1;
+    editTime[1] = ui->Time_2;
+    editTime[2] = ui->Time_3;
+    editTime[3] = ui->Time_4;
+    editTime[4] = ui->Time_5;
+    editTime[5] = ui->Time_6;
+    editTime[6] = ui->Time_7;
+    editTime[7] = ui->Time_8;
+    editTime[8] = ui->Time_9;
+    editTime[9] = ui->Time_10;
+    editTime[10] = ui->Time_11;
+    editTime[11] = ui->Time_12;
+    editTime[12] = ui->Time_13;
+    editTime[13] = ui->Time_14;
+    editTime[14] = ui->Time_15;
+    editTime[15] = ui->Time_16;
+    editTime[16] = ui->Time_17;
+    curveName.setExclusive(false);
+    for(int i = 0 ; i<17 ; i++)
+    {
+        editTime[i]->setVisible(false);
+        curveName.button(i)->setVisible(false);
+//        curveName.button(i)->setChecked(false);
+        editData[i]->setVisible(false);
+        btnColor.button(i)->setVisible(false);
+    }
+    ui->scrollAreaWidgetContents->setMinimumHeight(100);
 }
 
 CurveFont::~CurveFont()
@@ -113,7 +194,7 @@ void CurveFont::on_actionOpen_triggered()
 {
     QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
     QString fileName = fd->getOpenFileName(this,tr("Open File"),"C:\\Users\\Administrator\\Desktop\\Data",
-                                           tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr)"));
+                                           tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)"));
     if(fileName == "")
           return;
     QDir dir = QDir::current();
@@ -132,7 +213,7 @@ void CurveFont::on_actionOpen_triggered()
     int length = Path.length();
     length -= 3;
     QString strs= Path.mid(length);
-    if(strs=="kdt" || strs=="dat" || strs=="sdr")
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
     {
         if(historyFile.size()<10)
         {
@@ -153,6 +234,12 @@ void CurveFont::on_actionOpen_triggered()
         data_reader[0].readToMap();
         data_reader[0].dealData();
         draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
     }
     else
     {
@@ -392,6 +479,7 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
+        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
@@ -424,7 +512,10 @@ void CurveFont::draw()
             Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
             Page->graph(i)->rescaleAxes();
         }
-        qDebug()<<min[numOfPage-1]<<max[numOfPage-1];
+//        tracer = new QCPItemTracer(Page);
+//        tracer->setVisible(true);
+//        tracer->setPen(QPen(Qt::DashLine));
+//        tracer->setStyle(QCPItemTracer::tsCrosshair);
         Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
@@ -439,15 +530,33 @@ void CurveFont::draw()
     }
 }
 
+void CurveFont::mousemove(QMouseEvent* e)
+{
+    int cnt = ui->tabWidget->currentIndex();
+    double x = currentPage[cnt]->xAxis->pixelToCoord(e->pos().x());
+//    tracer->setGraph(currentPage[cnt]->graph(0));
+//    tracer->setGraphKey(x);
+    if(!isFirst)
+    {
+        tracer->setGraph(currentPage[cnt]->graph(0));
+        tracer->setGraphKey(x);
+        tracer->setInterpolating(true);
+        tracer->updatePosition();
+    }
+    currentPage[cnt]->replot();
+}
 
-
-
-
-
-
-
-
-
-
-
+void CurveFont::on_tabWidget_currentChanged(int index)
+{
+    if(index>=0&&!isFirst)
+    {
+        tracer->setVisible(false);
+        tracer = new QCPItemTracer(currentPage[index]);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        ui->tabWidget->setCurrentIndex(index);
+        connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[index]->replot();
+    }
+}
 

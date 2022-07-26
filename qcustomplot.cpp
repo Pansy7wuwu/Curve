@@ -30626,8 +30626,8 @@ void QCPItemTracer::draw(QCPPainter *painter)
     }
     case tsCrosshair:
     {
-      if (center.y() > clip.top() && center.y() < clip.bottom())
-        painter->drawLine(QLineF(clip.left(), center.y(), clip.right(), center.y()));
+//      if (center.y() > clip.top() && center.y() < clip.bottom())
+//        painter->drawLine(QLineF(clip.left(), center.y(), clip.right(), center.y()));
       if (center.x() > clip.left() && center.x() < clip.right())
         painter->drawLine(QLineF(center.x(), clip.top(), center.x(), clip.bottom()));
       break;

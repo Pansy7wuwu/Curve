@@ -8,6 +8,7 @@
 #include <QTranslator>
 #include <QVector>
 #include <qcustomplot.h>
+#include <QButtonGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CurveFont; }
@@ -31,10 +32,16 @@ public:
     QVector<double> min,max;
     QColor* color;
     QCPItemTracer* tracer;
+    QButtonGroup curveName;
+    QButtonGroup btnColor;
+    QVector<QLineEdit*> editData,editTime;
 
     void closeEvent(QCloseEvent* event);
     void updateHistoryFile();
     void draw();
+
+public slots:
+    void mousemove(QMouseEvent* e);
 
 private slots:
     void on_actionExit_triggered();
@@ -46,6 +53,8 @@ private slots:
     void on_actionEnglish_triggered();
 
     void on_actionTchinese_triggered();
+
+    void on_tabWidget_currentChanged(int index);
 
 private:
     Ui::CurveFont *ui;

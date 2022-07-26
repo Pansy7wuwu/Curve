@@ -36,6 +36,9 @@ public:
     short sdrTemperatureMultiple;
     short sdrHumidityMultiple;
     int datType;
+    int TDT_Y_MAX;
+    int TDT_Y_MIN;
+    int TDT_Multiple;
 
     void setFilePath(QString);//设置文件路径
     void readToMap();//读取到map
@@ -49,11 +52,13 @@ public:
     void dealType2();//处理dat数据
     void judgeDatType();//判断dat类别
     void dealType3();//处理未知文件类别
+    void dealType4();
 
 private:
     QString fileType1 = "kdt";
     QString fileType2 = "sdr";
     QString fileType3 = "dat";
+    QString fileType4 = "tdt";
     QString kdtType0 = "6E0B";
     QString kdtType1 = "5E0C";
     QString kdtType2 = "FE0A";

@@ -8,4 +8,10 @@
         <file>language_en.qm</file>
         <file>language_tra_cn.qm</file>
     </qresource>
+    <qresource prefix="/Image">
+        <file>Icon/Delete.png</file>
+        <file>Icon/OpenFile.png</file>
+        <file>Icon/Reset.png</file>
+        <file>Icon/Save.png</file>
+    </qresource>
 </RCC>

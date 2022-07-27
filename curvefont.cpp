@@ -542,6 +542,224 @@ void CurveFont::draw()
             isFirst=false;
         break;
     }
+    case 1:
+    {
+        Page->yAxis->setLabel("Temperature(°C)");
+        Page->yAxis2->setVisible(true);
+        Page->yAxis2->setLabel("Humidity(RH%)");
+        Page->addGraph(Page->xAxis,Page->yAxis);
+        Page->addGraph(Page->xAxis,Page->yAxis);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        QList<QCPAxis*> axes;
+        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis;
+        Page->axisRect()->setRangeZoomAxes(axes);
+        Page->axisRect()->setRangeDragAxes(axes);
+        Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
+        int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
+        Time[numOfPage-1].resize(size);
+//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Data[numOfPage-1][i].resize(size);
+        }
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/4 ; i++)
+        {
+            Time[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
+        }
+        int INDEX = 0;
+        int _INDEX = 0;
+        min[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        max[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size() ; i++)
+        {
+            if(data_reader[numOfPage-1].Processed_Data[i]>max[numOfPage-1])
+                max[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            if(data_reader[numOfPage-1].Processed_Data[i]<min[numOfPage-1])
+                min[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            Data[numOfPage-1][INDEX][_INDEX] = data_reader[numOfPage-1].Processed_Data[i];
+            INDEX++;
+            if(INDEX==data_reader[numOfPage-1].numOfDataGroup)
+            {
+                _INDEX++;
+                INDEX=0;
+            }
+        }
+//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Page->graph(i)->setPen(color[i]);
+            Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
+//            if(i==0||i==1)
+//                Page->graph(i)->rescaleAxes();
+//            else
+//                Page->yAxis2->rescale(true);
+        }
+//        tracer = new QCPItemTracer(Page);
+//        tracer->setVisible(true);
+//        tracer->setPen(QPen(Qt::DashLine));
+//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+        Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        Page->yAxis2->setRange(0,100);
+        Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
+        Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
+        Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->replot();
+        ui->tabWidget->setCurrentIndex(numOfPage-1);
+        if(isFirst)
+            isFirst=false;
+        break;
+    }
+    case 2:
+    {
+        Page->yAxis->setLabel("Temperature(°C)");
+        if(data_reader[numOfPage-1].numOfYAxis==2)
+        {
+            Page->yAxis2->setVisible(true);
+            Page->yAxis2->setLabel(data_reader[numOfPage-1].YAxis_Info[1]);
+            Page->addGraph();
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            QList<QCPAxis*> axes;
+            axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis;
+            Page->axisRect()->setRangeZoomAxes(axes);
+            Page->axisRect()->setRangeDragAxes(axes);
+        }
+        else
+        {
+            Page->addGraph();
+        }
+        Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
+        int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
+        Time[numOfPage-1].resize(size);
+//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Data[numOfPage-1][i].resize(size);
+        }
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Time[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
+        }
+        int INDEX = 0;
+        int _INDEX = 0;
+        min[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        max[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size() ; i++)
+        {
+            if(data_reader[numOfPage-1].Processed_Data[i]>max[numOfPage-1])
+                max[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            if(data_reader[numOfPage-1].Processed_Data[i]<min[numOfPage-1])
+                min[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            Data[numOfPage-1][INDEX][_INDEX] = data_reader[numOfPage-1].Processed_Data[i];
+            INDEX++;
+            if(INDEX==data_reader[numOfPage-1].numOfDataGroup)
+            {
+                _INDEX++;
+                INDEX=0;
+            }
+        }
+//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Page->graph(i)->setPen(color[i]);
+            Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
+//            if(i==0||i==1)
+//                Page->graph(i)->rescaleAxes();
+//            else
+//                Page->yAxis2->rescale(true);
+        }
+//        tracer = new QCPItemTracer(Page);
+//        tracer->setVisible(true);
+//        tracer->setPen(QPen(Qt::DashLine));
+//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+        Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        Page->yAxis2->setRange(0,100);
+        Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
+        Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
+        Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->replot();
+        ui->tabWidget->setCurrentIndex(numOfPage-1);
+        if(isFirst)
+            isFirst=false;
+        break;
+    }
+    case 4:
+    {
+        Page->yAxis->setLabel("Temperature(°C)");
+        Page->yAxis2->setVisible(true);
+        Page->yAxis2->setLabel("Humidity(RH%)");
+        Page->addGraph(Page->xAxis,Page->yAxis);
+        Page->addGraph(Page->xAxis,Page->yAxis);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->addGraph(Page->xAxis,Page->yAxis2);
+        QList<QCPAxis*> axes;
+        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis;
+        Page->axisRect()->setRangeZoomAxes(axes);
+        Page->axisRect()->setRangeDragAxes(axes);
+        Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
+        int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
+        Time[numOfPage-1].resize(size);
+//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Data[numOfPage-1][i].resize(size);
+        }
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Time[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
+        }
+        int INDEX = 0;
+        int _INDEX = 0;
+        min[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        max[numOfPage-1]=data_reader[numOfPage-1].Processed_Data[0];
+        for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size() ; i++)
+        {
+            if(data_reader[numOfPage-1].Processed_Data[i]>max[numOfPage-1])
+                max[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            if(data_reader[numOfPage-1].Processed_Data[i]<min[numOfPage-1])
+                min[numOfPage-1] = data_reader[numOfPage-1].Processed_Data[i];
+            Data[numOfPage-1][INDEX][_INDEX] = data_reader[numOfPage-1].Processed_Data[i];
+            INDEX++;
+            if(INDEX==data_reader[numOfPage-1].numOfDataGroup)
+            {
+                _INDEX++;
+                INDEX=0;
+            }
+        }
+//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
+        {
+            Page->graph(i)->setPen(color[i]);
+            Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
+//            if(i==0||i==1)
+//                Page->graph(i)->rescaleAxes();
+//            else
+//                Page->yAxis2->rescale(true);
+        }
+//        tracer = new QCPItemTracer(Page);
+//        tracer->setVisible(true);
+//        tracer->setPen(QPen(Qt::DashLine));
+//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+        Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        Page->yAxis2->setRange(0,100);
+        Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
+        Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
+        Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->replot();
+        ui->tabWidget->setCurrentIndex(numOfPage-1);
+        if(isFirst)
+            isFirst=false;
+        break;
+    }
     default:
         break;
     }

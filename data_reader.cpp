@@ -1076,10 +1076,10 @@ void Data_Reader::dealType1()
         int timeIndex = 0;
         int dataIndex = 0;
         int sdrNumOfDataIndex = 0;
-        short numTemp[2];
-        short num = 0;
-        short actualNumTemp[2];
-        short actualNum;
+        int numTemp[2];
+        int num = 0;
+        int actualNumTemp[2];
+        int actualNum;
         float realityNum;
         float A;
         while(bit <= iter.key())
@@ -1188,10 +1188,10 @@ void Data_Reader::dealType1()
         int timeIndex = 0;
         int dataIndex = 0;
         int sdrNumOfDataIndex = 0;
-        short numTemp[2];
-        short num = 0;
-        short actualNumTemp[2];
-        short actualNum;
+        int numTemp[2];
+        int num = 0;
+        int actualNumTemp[2];
+        int actualNum;
         float realityNum;
         float A;
         while(bit <= iter.key())
@@ -1300,10 +1300,10 @@ void Data_Reader::dealType1()
         int timeIndex = 0;
         int dataIndex = 0;
         int sdrNumOfDataIndex = 0;
-        short numTemp[2];
-        short num = 0;
-        short actualNumTemp[2];
-        short actualNum;
+        int numTemp[2];
+        int num = 0;
+        int actualNumTemp[2];
+        int actualNum;
         float realityNum;
         float A;
         while(bit <= iter.key())

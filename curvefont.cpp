@@ -146,16 +146,24 @@ CurveFont::CurveFont(QWidget *parent)
     editTime[15] = ui->Time_16;
     editTime[16] = ui->Time_17;
     curveName->setExclusive(false);
-    for(int i = 0 ; i<17 ; i++)
+    for(int i=0 ; i<17 ; i++)
     {
-        qDebug()<<1;
+        btnColor->button(i)->setStyleSheet("border:none");
+        QPalette pal = btnColor->button(i)->palette();
+        pal.setColor(QPalette::Button,color[i]);
+        btnColor->button(i)->setPalette(pal);
+        btnColor->button(i)->setAutoFillBackground(true);
+    }
+    for(int i=0 ; i<17 ; i++)
+    {
+//        qDebug()<<1;
         editTime[i]->setVisible(false);
         curveName->button(i)->setVisible(false);
 //        curveName.button(i)->setChecked(false);
         editData[i]->setVisible(false);
         btnColor->button(i)->setVisible(false);
     }
-//    ui->scrollAreaWidgetContents->setMinimumHeight(100);
+    ui->scrollAreaWidgetContents->setMinimumHeight(100);
 }
 
 CurveFont::~CurveFont()
@@ -245,6 +253,7 @@ void CurveFont::on_actionOpen_triggered()
         tracer->setStyle(QCPItemTracer::tsCrosshair);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
+        showTrack(0);
     }
     else
     {
@@ -484,7 +493,7 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
-        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
@@ -523,6 +532,9 @@ void CurveFont::draw()
 //        tracer->setStyle(QCPItemTracer::tsCrosshair);
         Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
+        Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
+        Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
         Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
@@ -539,6 +551,20 @@ void CurveFont::mousemove(QMouseEvent* e)
 {
     int cnt = ui->tabWidget->currentIndex();
     double x = currentPage[cnt]->xAxis->pixelToCoord(e->pos().x());
+    int H = x / (60*60);
+    int M = (x- (H * 60 * 60)) / 60;
+    int S = (x - (H * 60 * 60)) - M * 60;
+    QString hour = QString::number(H);
+    if (hour.length() == 1) hour = "0" + hour;
+    QString min = QString::number(M);
+    if (min.length() == 1) min = "0" + min;
+    QString sec = QString::number(S);
+    if (sec.length() == 1) sec = "0" + sec;
+    QString qTime = hour + ":" + min + ":" + sec;
+    for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+    {
+        editTime[i]->setText(qTime);
+    }
 //    tracer->setGraph(currentPage[cnt]->graph(0));
 //    tracer->setGraphKey(x);
     if(!isFirst)
@@ -548,6 +574,14 @@ void CurveFont::mousemove(QMouseEvent* e)
         tracer->setInterpolating(true);
         tracer->updatePosition();
     }
+    for(int i=0 ; i<data_reader[cnt].numOfDataGroup;i++)
+    {
+        tracer->setGraph(currentPage[cnt]->graph(i));
+        tracer->setGraphKey(x);
+        double yValue = tracer->position->value();
+        editData[i]->setText(QString::number(yValue));
+    }
+//    for()
     currentPage[cnt]->replot();
 }
 
@@ -555,6 +589,7 @@ void CurveFont::on_tabWidget_currentChanged(int index)
 {
     if(index>=0&&!isFirst)
     {
+        hideTrack();
         tracer->setVisible(false);
         tracer = new QCPItemTracer(currentPage[index]);
         tracer->setPen(QPen(Qt::DashLine));
@@ -562,6 +597,629 @@ void CurveFont::on_tabWidget_currentChanged(int index)
         ui->tabWidget->setCurrentIndex(index);
         connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[index]->replot();
+        showTrack(index);
     }
+}
+
+void CurveFont::hideTrack()
+{
+    for(int i = 0 ; i<17 ; i++)
+    {
+//        qDebug()<<1;
+        editTime[i]->setVisible(false);
+        curveName->button(i)->setVisible(false);
+//        curveName.button(i)->setChecked(false);
+        editData[i]->setVisible(false);
+        btnColor->button(i)->setVisible(false);
+    }
+}
+
+void CurveFont::showTrack(int index)
+{
+    for(int i=0 ; i<data_reader[index].numOfDataGroup ; i++)
+    {
+        editTime[i]->setVisible(true);
+        curveName->button(i)->setVisible(true);
+        curveName->button(i)->setChecked(true);
+        QString strs = QString::number(i)+". "+data_reader[index].Track_Info[i];
+        curveName->button(i)->setText(strs);
+        editData[i]->setVisible(true);
+        btnColor->button(i)->setVisible(true);
+    }
+    ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
+}
+
+void CurveFont::on_checkBox_1_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_1->isChecked())
+    {
+        currentPage[cnt]->graph(0)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[0]->setEnabled(true);
+        editTime[0]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(0)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[0]->setEnabled(false);
+        editTime[0]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_2_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_2->isChecked())
+    {
+        currentPage[cnt]->graph(1)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[1]->setEnabled(true);
+        editTime[1]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(1)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[1]->setEnabled(false);
+        editTime[1]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_3_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_3->isChecked())
+    {
+        currentPage[cnt]->graph(2)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[2]->setEnabled(true);
+        editTime[2]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(2)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[2]->setEnabled(false);
+        editTime[2]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_4_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_4->isChecked())
+    {
+        currentPage[cnt]->graph(3)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[3]->setEnabled(true);
+        editTime[3]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(3)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[3]->setEnabled(false);
+        editTime[3]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_5_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_5->isChecked())
+    {
+        currentPage[cnt]->graph(4)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[4]->setEnabled(true);
+        editTime[4]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(4)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[4]->setEnabled(false);
+        editTime[4]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_6_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_6->isChecked())
+    {
+        currentPage[cnt]->graph(5)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[5]->setEnabled(true);
+        editTime[5]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(5)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[5]->setEnabled(false);
+        editTime[5]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_7_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_7->isChecked())
+    {
+        currentPage[cnt]->graph(6)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[6]->setEnabled(true);
+        editTime[6]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(6)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[6]->setEnabled(false);
+        editTime[6]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_8_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_8->isChecked())
+    {
+        currentPage[cnt]->graph(7)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[7]->setEnabled(true);
+        editTime[7]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(7)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[7]->setEnabled(false);
+        editTime[7]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_9_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_9->isChecked())
+    {
+        currentPage[cnt]->graph(8)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[8]->setEnabled(true);
+        editTime[8]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(8)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[8]->setEnabled(false);
+        editTime[8]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_10_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_10->isChecked())
+    {
+        currentPage[cnt]->graph(9)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[9]->setEnabled(true);
+        editTime[9]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(9)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[9]->setEnabled(false);
+        editTime[9]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_11_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_11->isChecked())
+    {
+        currentPage[cnt]->graph(10)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[10]->setEnabled(true);
+        editTime[10]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(10)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[10]->setEnabled(false);
+        editTime[10]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_12_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_12->isChecked())
+    {
+        currentPage[cnt]->graph(11)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[11]->setEnabled(true);
+        editTime[11]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(11)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[11]->setEnabled(false);
+        editTime[11]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_13_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_13->isChecked())
+    {
+        currentPage[cnt]->graph(12)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[12]->setEnabled(true);
+        editTime[12]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(12)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[12]->setEnabled(false);
+        editTime[12]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_14_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_14->isChecked())
+    {
+        currentPage[cnt]->graph(13)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[13]->setEnabled(true);
+        editTime[13]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(13)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[13]->setEnabled(false);
+        editTime[13]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_15_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_15->isChecked())
+    {
+        currentPage[cnt]->graph(14)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[14]->setEnabled(true);
+        editTime[14]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(14)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[14]->setEnabled(false);
+        editTime[14]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_16_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_16->isChecked())
+    {
+        currentPage[cnt]->graph(15)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[15]->setEnabled(true);
+        editTime[15]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(15)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[15]->setEnabled(false);
+        editTime[15]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_checkBox_17_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    if(ui->checkBox_17->isChecked())
+    {
+        currentPage[cnt]->graph(16)->setVisible(true);
+        currentPage[cnt]->replot();
+        editData[16]->setEnabled(true);
+        editTime[16]->setEnabled(true);
+    }
+    else
+    {
+        currentPage[cnt]->graph(16)->setVisible(false);
+        currentPage[cnt]->replot();
+        editData[16]->setEnabled(false);
+        editTime[16]->setEnabled(false);
+    }
+}
+
+
+void CurveFont::on_color_1_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(0)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_1->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_1->setPalette(pal);
+    ui->color_1->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_2_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(1)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_2->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_2->setPalette(pal);
+    ui->color_2->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_3_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(2)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_3->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_3->setPalette(pal);
+    ui->color_3->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_4_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(3)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_4->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_4->setPalette(pal);
+    ui->color_4->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_5_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(4)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_5->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_5->setPalette(pal);
+    ui->color_5->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_6_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(5)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_6->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_6->setPalette(pal);
+    ui->color_6->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_7_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(6)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_7->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_7->setPalette(pal);
+    ui->color_7->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_8_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(7)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_8->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_8->setPalette(pal);
+    ui->color_8->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_9_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(8)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_9->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_9->setPalette(pal);
+    ui->color_9->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_10_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(9)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_10->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_10->setPalette(pal);
+    ui->color_10->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_11_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(10)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_11->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_11->setPalette(pal);
+    ui->color_11->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_12_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(11)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_12->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_12->setPalette(pal);
+    ui->color_12->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_13_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(12)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_13->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_13->setPalette(pal);
+    ui->color_13->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_14_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(13)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_14->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_14->setPalette(pal);
+    ui->color_14->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_15_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(4)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_15->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_15->setPalette(pal);
+    ui->color_15->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_16_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(15)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_1->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_16->setPalette(pal);
+    ui->color_16->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_color_17_clicked()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    QColorDialog color;
+    QColor c = color.getColor();
+    currentPage[cnt]->graph(16)->setPen(QPen(QColor(c.red(),c.green(),c.blue())));
+    QPalette pal = ui->color_17->palette();
+    pal.setColor(QPalette::Button,c);
+    ui->color_17->setPalette(pal);
+    ui->color_17->setAutoFillBackground(true);
+//    ui->color_1->setFlat(true);
+    currentPage[cnt]->replot();
 }
 

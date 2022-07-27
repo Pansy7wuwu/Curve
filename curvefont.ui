@@ -60,7 +60,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>498</width>
+             <width>521</width>
              <height>510</height>
             </rect>
            </property>
@@ -80,7 +80,7 @@
             <item row="17" column="3">
              <widget class="QPushButton" name="color_13">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -88,7 +88,7 @@
              <widget class="QCheckBox" name="checkBox_5">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -105,6 +105,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -117,6 +123,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
@@ -131,6 +143,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -140,7 +158,7 @@
              <widget class="QCheckBox" name="checkBox_7">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -153,7 +171,7 @@
              <widget class="QCheckBox" name="checkBox_4">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -170,6 +188,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -183,6 +207,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -191,14 +221,14 @@
             <item row="12" column="3">
              <widget class="QPushButton" name="color_8">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item row="6" column="3">
              <widget class="QPushButton" name="color_4">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -209,6 +239,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -224,14 +260,14 @@
             <item row="18" column="3">
              <widget class="QPushButton" name="color_14">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item row="4" column="3">
              <widget class="QPushButton" name="color_3">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -239,7 +275,7 @@
              <widget class="QCheckBox" name="checkBox_6">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -255,6 +291,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -275,6 +317,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -289,7 +337,7 @@
             <item row="2" column="3">
              <widget class="QPushButton" name="color_2">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -300,6 +348,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -320,6 +374,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -328,7 +388,7 @@
             <item row="13" column="3">
              <widget class="QPushButton" name="color_9">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -339,6 +399,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
@@ -352,6 +418,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -368,7 +440,7 @@
              <widget class="QCheckBox" name="checkBox_10">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -380,7 +452,7 @@
             <item row="16" column="3">
              <widget class="QPushButton" name="color_12">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -392,6 +464,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -401,7 +479,7 @@
              <widget class="QCheckBox" name="checkBox_16">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -417,6 +495,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -437,6 +521,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -456,6 +546,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -471,7 +567,7 @@
              <widget class="QCheckBox" name="checkBox_14">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -488,6 +584,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -503,7 +605,7 @@
              <widget class="QCheckBox" name="checkBox_13">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -515,7 +617,7 @@
             <item row="21" column="3">
              <widget class="QPushButton" name="color_16">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -523,7 +625,7 @@
              <widget class="QCheckBox" name="checkBox_11">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -540,6 +642,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -554,7 +662,7 @@
             <item row="22" column="3">
              <widget class="QPushButton" name="color_17">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -562,7 +670,7 @@
              <widget class="QCheckBox" name="checkBox_17">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -579,6 +687,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -593,7 +707,7 @@
             <item row="10" column="3">
              <widget class="QPushButton" name="color_7">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -604,6 +718,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
@@ -618,6 +738,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -630,6 +756,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -646,7 +778,7 @@
              <widget class="QCheckBox" name="checkBox_8">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -663,6 +795,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -677,7 +815,7 @@
             <item row="8" column="3">
              <widget class="QPushButton" name="color_5">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -688,6 +826,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -708,6 +852,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -717,7 +867,7 @@
              <widget class="QCheckBox" name="checkBox_12">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -730,7 +880,7 @@
              <widget class="QCheckBox" name="checkBox_15">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -743,7 +893,7 @@
              <widget class="QCheckBox" name="checkBox_3">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -760,6 +910,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -774,14 +930,14 @@
             <item row="19" column="3">
              <widget class="QPushButton" name="color_15">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item row="14" column="3">
              <widget class="QPushButton" name="color_10">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -789,7 +945,7 @@
              <widget class="QCheckBox" name="checkBox_1">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -806,6 +962,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>180</width>
@@ -820,7 +982,7 @@
             <item row="15" column="3">
              <widget class="QPushButton" name="color_11">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -832,6 +994,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -840,7 +1008,7 @@
             <item row="9" column="3">
              <widget class="QPushButton" name="color_6">
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -851,6 +1019,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
@@ -865,6 +1039,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -878,6 +1058,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -887,7 +1073,7 @@
              <widget class="QCheckBox" name="checkBox_2">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -904,6 +1090,12 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -916,6 +1108,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="maximumSize">
                <size>
@@ -930,14 +1128,20 @@
             </item>
             <item row="0" column="3">
              <widget class="QPushButton" name="color_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>140</width>
+                <width>100</width>
                 <height>0</height>
                </size>
               </property>
               <property name="text">
-               <string>PushButton</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -945,7 +1149,7 @@
              <widget class="QCheckBox" name="checkBox_9">
               <property name="minimumSize">
                <size>
-                <width>100</width>
+                <width>160</width>
                 <height>0</height>
                </size>
               </property>
@@ -961,6 +1165,12 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
@@ -980,12 +1190,24 @@
            </size>
           </property>
           <property name="text">
-           <string>       曲线名</string>
+           <string>             曲线名</string>
           </property>
          </widget>
         </item>
         <item row="3" column="1">
          <widget class="QLabel" name="labelData">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>100</width>
@@ -993,21 +1215,21 @@
            </size>
           </property>
           <property name="text">
-           <string>            数值</string>
+           <string>                            数值</string>
           </property>
          </widget>
         </item>
         <item row="3" column="2">
          <widget class="QLabel" name="labelColor">
           <property name="text">
-           <string>                    颜色</string>
+           <string>          颜色</string>
           </property>
          </widget>
         </item>
         <item row="3" column="3">
          <widget class="QLabel" name="labelTime">
           <property name="text">
-           <string>              时间</string>
+           <string>      时间</string>
           </property>
          </widget>
         </item>

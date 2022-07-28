@@ -133,6 +133,28 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void on_actionReset_triggered();
+
+    void on_actionHistoryFile0_triggered();
+
+    void on_actionHistoryFile1_triggered();
+
+    void on_actionHistoryFile2_triggered();
+
+    void on_actionHistoryFile3_triggered();
+
+    void on_actionHistoryFile4_triggered();
+
+    void on_actionHistoryFile5_triggered();
+
+    void on_actionHistoryFile6_triggered();
+
+    void on_actionHistoryFile7_triggered();
+
+    void on_actionHistoryFile8_triggered();
+
+    void on_actionHistoryFile9_triggered();
+
 private:
     Ui::CurveFont *ui;
     int numOfHistoryFile = 0;

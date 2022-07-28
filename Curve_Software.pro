@@ -8,6 +8,7 @@ TRANSLATIONS = language_cn.ts\
                 language_tra_cn.ts
 
 CONFIG += c++11
+CONFIG += warn_off
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

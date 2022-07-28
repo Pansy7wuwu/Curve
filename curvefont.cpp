@@ -205,11 +205,17 @@ void CurveFont::closeEvent(QCloseEvent *event)
 
 void CurveFont::on_actionOpen_triggered()
 {
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
     QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
     QString fileName = fd->getOpenFileName(this,tr("Open File"),"C:\\Users\\Administrator\\Desktop\\Data",
                                            tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)"));
     if(fileName == "")
-          return;
+    {
+        label->setText("");
+        return;
+    }
     QDir dir = QDir::current();
     QString path = dir.filePath(fileName);
     QString PATH="";
@@ -264,6 +270,8 @@ void CurveFont::on_actionOpen_triggered()
         data_reader[index].dealData();
         draw();
     }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
 }
 
 
@@ -1444,6 +1452,9 @@ void CurveFont::on_color_17_clicked()
 
 void CurveFont::on_actionOpenFile_triggered()
 {
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
     QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
     QString fileName = fd->getOpenFileName(this,tr("Open File"),"C:\\Users\\Administrator\\Desktop\\Data",
                                            tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)"));
@@ -1503,11 +1514,18 @@ void CurveFont::on_actionOpenFile_triggered()
         data_reader[index].dealData();
         draw();
     }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
 }
 
 
 void CurveFont::on_actionDelete_triggered()
 {
+    if(isFirst)
+    {
+        QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+        return;
+    }
     int cnt = ui->tabWidget->currentIndex();
     numOfPage--;
     if(numOfPage==0)
@@ -1544,6 +1562,11 @@ void CurveFont::on_actionDelete_triggered()
 
 void CurveFont::on_actionSave_triggered()
 {
+    if(isFirst)
+    {
+        QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+        return;
+    }
     QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
     QString fileName = fd->getExistingDirectory(this,tr("Open File"),"./");
     if(fileName == "")
@@ -1754,5 +1777,715 @@ void CurveFont::on_actionSave_triggered()
         }
         mutex.unlock();
     }
+}
+
+
+void CurveFont::on_actionReset_triggered()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
+    currentPage[cnt]->yAxis2->setRange(0,100);
+    currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_actionHistoryFile0_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile0->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile1_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile1->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile2_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile2->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile3_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile3->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile4_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile4->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile5_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile5->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile6_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile6->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile7_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile7->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile8_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile8->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_actionHistoryFile9_triggered()
+{
+    QLabel* label = new QLabel(this);
+    label->setText(tr("正在处理，请稍后..."));
+    ui->statusbar->addWidget(label);
+    QString fileName = ui->actionHistoryFile9->text();
+    if(fileName == "")
+    {
+        label->setText("");
+        return;
+    }
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+    label->setText("");
+    ui->statusbar->showMessage(tr("完成"),3000);
 }
 

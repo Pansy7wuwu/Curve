@@ -198,6 +198,7 @@ void Data_Reader::dealType0()
             Track_Info[i] = "Temperature(°C)";
         }
         //开始时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -304,6 +305,7 @@ void Data_Reader::dealType0()
             Track_Info[i] = "Temperature(°C)";
         }
         //开始时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -418,6 +420,7 @@ void Data_Reader::dealType0()
         Track_Info[4] = "Humi PID(%)";
         Track_Info[5] = "Svr PID(%)";
         //获取时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -525,6 +528,7 @@ void Data_Reader::dealType0()
         Track_Info[2] = "Temp PID(%)";
         Track_Info[3] = "Svr PID(%)";
         //获取时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -630,6 +634,7 @@ void Data_Reader::dealType0()
         Track_Info[0] = "Temperature(°C)";
         Track_Info[1] = "Humidity(%RH)";
         //获取时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -781,6 +786,7 @@ void Data_Reader::dealType0()
         Track_Info[34] = "C2(ON/OFF)";
         Track_Info[35] = "C12(ON/OFF)";
         //获取时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -889,6 +895,7 @@ void Data_Reader::dealType0()
         }
         Track_Info[6] = "Average Temperature(°C)";
         //获取时间
+        haveStratTime = true;
         short year[2];
         year[0] = map.value(24);
         year[1] = map.value(25);
@@ -1403,6 +1410,7 @@ void Data_Reader::dealType2()
         Track_Info[0] = "Temperature(°C)";
         Track_Info[1] = "Humidity(RH%)";
         //获取时间
+        haveStratTime = true;
         int year[2];
         year[0] = map.value(12);
         year[1] = map.value(13);
@@ -1454,6 +1462,7 @@ void Data_Reader::dealType2()
         Track_Info[0] = "Temperature(°C)";
         Track_Info[1] = "Pressure(kg/cm^2)";
         //获取时间
+        haveStratTime = true;
         int year[2];
         year[0] = map.value(12);
         year[1] = map.value(13);
@@ -1501,6 +1510,7 @@ void Data_Reader::dealType2()
         Track_Info = new QString[numOfDataGroup];
         Track_Info[0] = "Temperature(°C)";
         //获取时间
+        haveStratTime = true;
         int year[2];
         year[0] = map.value(12);
         year[1] = map.value(13);
@@ -1571,6 +1581,7 @@ void Data_Reader::dealType4()
     Track_Info[5] = "Humi PID(%)";
     Track_Info[6] = "Svr PID(%)";
     //获取时间
+    haveStratTime = true;
     short year[2];
     year[0] = map.value(16);
     year[1] = map.value(17);
@@ -1707,3 +1718,7 @@ void Data_Reader::dealType4()
     }
 }
 
+QString Data_Reader::getFilePath()
+{
+    return filePath;
+}

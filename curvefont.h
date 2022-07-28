@@ -35,6 +35,7 @@ public:
     QButtonGroup* curveName;
     QButtonGroup* btnColor;
     QVector<QLineEdit*> editData,editTime;
+    int pageIndex = 1;
 
     void closeEvent(QCloseEvent* event);
     void updateHistoryFile();
@@ -125,6 +126,12 @@ private slots:
     void on_color_16_clicked();
 
     void on_color_17_clicked();
+
+    void on_actionOpenFile_triggered();
+
+    void on_actionDelete_triggered();
+
+    void on_actionSave_triggered();
 
 private:
     Ui::CurveFont *ui;

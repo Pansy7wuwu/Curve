@@ -39,8 +39,10 @@ public:
     int TDT_Y_MAX;
     int TDT_Y_MIN;
     int TDT_Multiple;
+    bool haveStratTime = false;
 
     void setFilePath(QString);//设置文件路径
+    QString getFilePath();
     void readToMap();//读取到map
     void judgeFile();//判断文件后缀类别（kdt\sdr\dat）
     void dealData();//处理数据

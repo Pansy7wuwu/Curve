@@ -453,7 +453,7 @@ void CurveFont::draw()
     QCustomPlot* Page = new QCustomPlot();
     numOfPage++;
     currentPage[numOfPage-1] = Page;
-    QString CurveName = "Curve"+QString::number(numOfPage);
+    QString CurveName = "Curve"+QString::number(pageIndex++);
     ui->tabWidget->addTab(Page,CurveName);
 //    if(isFirst)
 //    {
@@ -1439,5 +1439,320 @@ void CurveFont::on_color_17_clicked()
     ui->color_17->setAutoFillBackground(true);
 //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_actionOpenFile_triggered()
+{
+    QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
+    QString fileName = fd->getOpenFileName(this,tr("Open File"),"C:\\Users\\Administrator\\Desktop\\Data",
+                                           tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)"));
+    if(fileName == "")
+          return;
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    QString Path = PATH;
+    Path = Path.toLower();
+    int length = Path.length();
+    length -= 3;
+    QString strs= Path.mid(length);
+    if(strs=="kdt" || strs=="dat" || strs=="sdr" || strs=="tdt")
+    {
+        if(historyFile.size()<10)
+        {
+            historyFile.push_back(PATH);
+        }
+        else
+        {
+            historyFile.pop_front();
+            historyFile.push_back(PATH);
+        }
+    }
+    updateHistoryFile();
+    if(isFirst)
+    {
+        ui->tabWidget->removeTab(0);
+        numOfPage=0;
+        data_reader[0].setFilePath(PATH);
+        data_reader[0].readToMap();
+        data_reader[0].dealData();
+        draw();
+        tracer = new QCPItemTracer(currentPage[0]);
+        tracer->setVisible(true);
+        tracer->setPen(QPen(Qt::DashLine));
+        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
+        currentPage[0]->replot();
+        showTrack(0);
+    }
+    else
+    {
+        int index = numOfPage-1;
+        index++;
+        data_reader[index].setFilePath(PATH);
+        data_reader[index].readToMap();
+        data_reader[index].dealData();
+        draw();
+    }
+}
+
+
+void CurveFont::on_actionDelete_triggered()
+{
+    int cnt = ui->tabWidget->currentIndex();
+    numOfPage--;
+    if(numOfPage==0)
+    {
+        isFirst=true;
+    }
+    ui->tabWidget->removeTab(cnt);
+    for(int i=cnt ; i<data_reader.size()-1 ; i++)
+    {
+        data_reader[i] = data_reader[i+1];
+    }
+    for(int i=cnt ; i<currentPage.size()-1 ; i++)
+    {
+        currentPage[i] = currentPage[i+1];
+    }
+    for(int i=cnt ; i<Time.size()-1 ; i++)
+    {
+        Time[i] = Time[i+1];
+    }
+    for(int i=cnt ; i<Data.size()-1 ; i++)
+    {
+        Data[i] = Data[i+1];
+    }
+    for(int i=cnt ; i<min.size()-1 ; i++)
+    {
+        min[i] = min[i+1];
+    }
+    for(int i=cnt ; i<max.size()-1 ; i++)
+    {
+        max[i] = max[i+1];
+    }
+}
+
+
+void CurveFont::on_actionSave_triggered()
+{
+    QFileDialog* fd = new QFileDialog(this);//创建打开文件对话框
+    QString fileName = fd->getExistingDirectory(this,tr("Open File"),"./");
+    if(fileName == "")
+        return;
+    int cnt = ui->tabWidget->currentIndex();
+    QDir dir = QDir::current();
+    QString path = dir.filePath(fileName);
+    QString PATH="";
+    for(int i=0;i<path.size();i++){
+        if(path[i]=='/'){
+            PATH+="\\\\";
+        }
+        else{
+            PATH+=path[i];
+        }
+    }
+    PATH+="\\\\CSV";
+    QDir csvdir;
+    if(!csvdir.exists(PATH))
+    {
+        csvdir.mkpath(PATH);
+    }
+    PATH+="\\\\";
+    QString currentPath = data_reader[cnt].getFilePath();
+    QString name;
+    for(int i=currentPath.size()-1 ; i>0 ; i--)
+    {
+        if(currentPath[i]!='\\')
+            name+=currentPath[i];
+        else
+            break;
+    }
+    for(int i=name.size()-1 ; i>0 ; i--)
+    {
+        if(name[i]!='.')
+            PATH+=name[i];
+        else
+            break;
+    }
+    PATH+=".csv";
+    int num = Data[cnt][0].size()/50000;
+    num+=1;
+    QString* SavePath = new QString[num];
+    int pathindex = 1;
+    if(num>1)
+    {
+        for(int i=0 ; i<num ; i++)
+        {
+            SavePath[i] = "";
+            for(int j=0 ; j<PATH.size() ; j++)
+            {
+                SavePath[i]+=PATH[j];
+                if(j<PATH.size()-2&&PATH[j+1] == '.')
+                {
+                    SavePath[i]=SavePath[i]+'-'+QString::number(pathindex);
+                    pathindex++;
+                }
+            }
+        }
+        QDateTime dateTime_;
+        QDate date_(data_reader[cnt].startTime[0],data_reader[cnt].startTime[1],data_reader[cnt].startTime[2]);
+        QTime time_(data_reader[cnt].startTime[3],data_reader[cnt].startTime[4],data_reader[cnt].startTime[5]);
+        dateTime_.setDate(date_);
+        dateTime_.setTime(time_);
+        QString strs = "";
+//        QTime frequency(0,0,0);
+        QString strs_ = "";
+        int DATAFREQUENCY = data_reader[cnt].dataFrequency;
+        long bit = 0;
+        for(int k=0 ; k<num ; k++)
+        {
+            static QMutex mutex;
+            mutex.lock();
+            QFile file(SavePath[k]);
+            if(file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+            {
+                QTextStream in(&file);
+                in<<"文件路径："<<","<<data_reader[cnt].getFilePath()<<'\n';
+                if(data_reader[cnt].haveStratTime==true)
+                {
+                    QDateTime dateTime;
+                    QDate date(data_reader[cnt].startTime[0],data_reader[cnt].startTime[1],data_reader[cnt].startTime[2]);
+                    QTime time(data_reader[cnt].startTime[3],data_reader[cnt].startTime[4],data_reader[cnt].startTime[5]);
+                    dateTime.setDate(date);
+                    dateTime.setTime(time);
+                    QString strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+                    in<<"时间段："<<","<<'\t'<<strs<<'\t'<<",";
+                    int total = Time[cnt].size();
+                    dateTime = dateTime.addSecs(Time[cnt][total-1]);
+                    strs = "";
+                    strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+                    in<<'\t'<<strs<<'\t'<<'\n';
+                }
+                int total = Time[cnt].size();
+                long x = Time[cnt][total-1];
+                int H = x / (60*60);
+                int M = (x- (H * 60 * 60)) / 60;
+                int S = (x - (H * 60 * 60)) - M * 60;
+                QString hour = QString::number(H);
+                if (hour.length() == 1) hour = "0" + hour;
+                QString min = QString::number(M);
+                if (min.length() == 1) min = "0" + min;
+                QString sec = QString::number(S);
+                if (sec.length() == 1) sec = "0" + sec;
+                QString qTime = hour + ":" + min + ":" + sec;
+                in<<"总用时："<<","<<qTime<<'\n';
+                in<<'\n';
+                in<<"Date"<<","<<"Time";
+                for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+                    in<<","<<data_reader[cnt].Track_Info[i];
+                in<<'\n';
+                for(bit; (bit/50000)<(k+1) ; bit++)
+                {
+                    strs = dateTime_.toString("yyyy-MM-dd hh:mm:ss");
+//                    strs_ = frequency.toString("hh:mm:ss");
+                    dateTime_  =  dateTime_.addSecs(DATAFREQUENCY);
+//                    frequency = frequency.addSecs(DATAFREQUENCY);
+                    in<<'\t'<<strs<<'\t';
+                    long x_ = Time[cnt][bit];
+                    int H_ = x_ / (60*60);
+                    int M_ = (x_- (H_ * 60 * 60)) / 60;
+                    int S_ = (x_ - (H_ * 60 * 60)) - M_ * 60;
+                    QString hour = QString::number(H_);
+                    if (hour.length() == 1) hour = "0" + hour;
+                    QString min = QString::number(M_);
+                    if (min.length() == 1) min = "0" + min;
+                    QString sec = QString::number(S_);
+                    if (sec.length() == 1) sec = "0" + sec;
+                    QString qTime = hour + ":" + min + ":" + sec;
+                    in<<","<<qTime;
+                    for(int j=0 ; j<data_reader[cnt].numOfDataGroup ; j++)
+                    {
+                        in<<","<<Data[cnt][j][bit];
+                    }
+                    in<<'\n';
+                }
+                file.close();
+            }
+            mutex.unlock();
+        }
+    }
+    else
+    {
+        static QMutex mutex;
+        mutex.lock();
+        QFile file(PATH);
+        if(file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+        {
+            QTextStream in(&file);
+            in<<"文件路径："<<","<<data_reader[cnt].getFilePath()<<'\n';
+            if(data_reader[cnt].haveStratTime==true)
+            {
+                QDateTime dateTime;
+                QDate date(data_reader[cnt].startTime[0],data_reader[cnt].startTime[1],data_reader[cnt].startTime[2]);
+                QTime time(data_reader[cnt].startTime[3],data_reader[cnt].startTime[4],data_reader[cnt].startTime[5]);
+                dateTime.setDate(date);
+                dateTime.setTime(time);
+                QString strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+                in<<"时间段："<<","<<'\t'<<strs<<'\t'<<",";
+                int total = Time[cnt].size();
+                dateTime = dateTime.addSecs(Time[cnt][total-1]);
+                strs = "";
+                strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+                in<<'\t'<<strs<<'\t'<<'\n';
+            }
+            int total = Time[cnt].size();
+            long x = Time[cnt][total-1];
+            int H = x / (60*60);
+            int M = (x- (H * 60 * 60)) / 60;
+            int S = (x - (H * 60 * 60)) - M * 60;
+            QString hour = QString::number(H);
+            if (hour.length() == 1) hour = "0" + hour;
+            QString min = QString::number(M);
+            if (min.length() == 1) min = "0" + min;
+            QString sec = QString::number(S);
+            if (sec.length() == 1) sec = "0" + sec;
+            QString qTime = hour + ":" + min + ":" + sec;
+            in<<"总用时："<<","<<qTime<<'\n';
+            in<<'\n';
+            in<<"Date"<<","<<"Time";
+            for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+                in<<","<<data_reader[cnt].Track_Info[i];
+            in<<'\n';
+            QDateTime dateTime_;
+            QDate date_(data_reader[cnt].startTime[0],data_reader[cnt].startTime[1],data_reader[cnt].startTime[2]);
+            QTime time_(data_reader[cnt].startTime[3],data_reader[cnt].startTime[4],data_reader[cnt].startTime[5]);
+            dateTime_.setDate(date_);
+            dateTime_.setTime(time_);
+            QString strs = "";
+            QTime frequency(0,0,0);
+            QString strs_ = "";
+            int DATAFREQUENCY = data_reader[cnt].dataFrequency;
+            for(int i=0 ; i<Data[cnt][0].size() ; i++)
+            {
+                strs = dateTime_.toString("yyyy-MM-dd hh:mm:ss");
+                strs_ = frequency.toString("hh:mm:ss");
+                dateTime_  =  dateTime_.addSecs(DATAFREQUENCY);
+                frequency = frequency.addSecs(DATAFREQUENCY);
+                in<<'\t'<<strs<<'\t';
+                in<<","<<strs_;
+                for(int j=0 ; j<data_reader[cnt].numOfDataGroup ; j++)
+                {
+                    in<<","<<Data[cnt][j][i];
+                }
+                in<<'\n';
+            }
+            file.close();
+        }
+        mutex.unlock();
+    }
 }
 

@@ -538,12 +538,22 @@ void CurveFont::draw()
 //        tracer->setVisible(true);
 //        tracer->setPen(QPen(Qt::DashLine));
 //        tracer->setStyle(QCPItemTracer::tsCrosshair);
-        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+        QDateTime now;
+        QDate nowDate(data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[0]);
+        QTime nowTime(data_reader[numOfPage-1].startTime[3],data_reader[numOfPage-1].startTime[4],data_reader[numOfPage-1].startTime[5]);
+        now.setDate(nowDate);
+        now.setTime(nowTime);
+        double NOW = now.toSecsSinceEpoch();
+//        qDebug()<<NOW;
+        QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
+        dateTicker->setDateTimeFormat("yyyy-mm-dd hh:mm:ss");
+        Page->xAxis->setTicker(dateTicker);
+        Page->xAxis->setRange(NOW,NOW+Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
-        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
@@ -714,6 +724,12 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
+        QDateTime now;
+        QDate nowDate(data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[1],data_reader[numOfPage-1].startTime[2]);
+        QTime nowTime(data_reader[numOfPage-1].startTime[3],data_reader[numOfPage-1].startTime[4],data_reader[numOfPage-1].startTime[5]);
+        now.setDate(nowDate);
+        now.setTime(nowTime);
+        double NOW = now.toSecsSinceEpoch();
 //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
@@ -721,7 +737,7 @@ void CurveFont::draw()
         }
         for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
-            Time[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
+            Time[numOfPage-1][i] =NOW + data_reader[numOfPage-1].dataFrequency*i;
         }
         int INDEX = 0;
         int _INDEX = 0;
@@ -755,7 +771,11 @@ void CurveFont::draw()
 //        tracer->setVisible(true);
 //        tracer->setPen(QPen(Qt::DashLine));
 //        tracer->setStyle(QCPItemTracer::tsCrosshair);
-        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+//        qDebug()<<NOW;
+        QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
+        dateTicker->setDateTimeFormat("yyyy-MM-dd hh:mm:ss");
+        Page->xAxis->setTicker(dateTicker);
+        Page->xAxis->setRange(Time[numOfPage-1][0],Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->yAxis2->setRange(0,100);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
@@ -777,16 +797,9 @@ void CurveFont::mousemove(QMouseEvent* e)
 {
     int cnt = ui->tabWidget->currentIndex();
     double x = currentPage[cnt]->xAxis->pixelToCoord(e->pos().x());
-    int H = x / (60*60);
-    int M = (x- (H * 60 * 60)) / 60;
-    int S = (x - (H * 60 * 60)) - M * 60;
-    QString hour = QString::number(H);
-    if (hour.length() == 1) hour = "0" + hour;
-    QString min = QString::number(M);
-    if (min.length() == 1) min = "0" + min;
-    QString sec = QString::number(S);
-    if (sec.length() == 1) sec = "0" + sec;
-    QString qTime = hour + ":" + min + ":" + sec;
+    QDateTime now;
+    now.setSecsSinceEpoch(x);
+    QString qTime = now.toString("yyyy-MM-dd hh:mm:ss");
     for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
     {
         editTime[i]->setText(qTime);
@@ -851,7 +864,15 @@ void CurveFont::showTrack(int index)
         curveName->button(i)->setText(strs);
         editData[i]->setVisible(true);
         btnColor->button(i)->setVisible(true);
+        QPalette pal = btnColor->button(i)->palette();
+        pal.setColor(QPalette::Button,color[i]);
+        btnColor->button(i)->setPalette(pal);
+        btnColor->button(i)->setAutoFillBackground(true);
+        editTime[i]->setEnabled(true);
+        editData[i]->setEnabled(true);
+        currentPage[index]->graph(i)->setVisible(true);
     }
+    currentPage[index]->replot();
     ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
 }
 

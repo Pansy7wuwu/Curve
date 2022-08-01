@@ -59,6 +59,8 @@ CurveFont::CurveFont(QWidget *parent)
     Data.resize(20);
     min.resize(20);
     max.resize(20);
+    NOW.resize(20);
+    TimeHMS.resize(20);
     color = new QColor[36];
 
     for(int i=0 ; i<36 ; i++)
@@ -73,6 +75,7 @@ CurveFont::CurveFont(QWidget *parent)
 
     curveName = new QButtonGroup;
     btnColor = new QButtonGroup;
+    rBtnTimeStyle = new QButtonGroup;
     int index = 0;
     curveName->addButton(ui->checkBox_1,index++);
     curveName->addButton(ui->checkBox_2,index++);
@@ -109,6 +112,8 @@ CurveFont::CurveFont(QWidget *parent)
     btnColor->addButton(ui->color_15,index++);
     btnColor->addButton(ui->color_16,index++);
     btnColor->addButton(ui->color_17,index++);
+    rBtnTimeStyle->addButton(ui->hms_radiobutton,0);
+    rBtnTimeStyle->addButton(ui->yMdhms_radiobutton,1);
     editData.resize(17);
     editTime.resize(17);
     editData[0] = ui->lineEdit_1;
@@ -156,14 +161,23 @@ CurveFont::CurveFont(QWidget *parent)
     }
     for(int i=0 ; i<17 ; i++)
     {
-//        qDebug()<<1;
+        //        qDebug()<<1;
         editTime[i]->setVisible(false);
         curveName->button(i)->setVisible(false);
-//        curveName.button(i)->setChecked(false);
+        //        curveName.button(i)->setChecked(false);
         editData[i]->setVisible(false);
         btnColor->button(i)->setVisible(false);
     }
+    rBtnTimeStyle->button(1)->setChecked(true);
     ui->scrollAreaWidgetContents->setMinimumHeight(100);
+
+//    ui->centralwidget->setStyleSheet("QWidget#centralwidget{background-color:rgb(127,127,127)}");
+//    ui->All->setStyleSheet("QWidget#All{background-color:rgb(195,195,195)}");
+//    ui->Curve_Info->setStyleSheet("QTabWidget#Curve_Info{border:none}");
+//    ui->Settings->setStyleSheet("QWidget#Settings{background-color:rgb(195,195,195)}");
+//    Page->axisRect()->setBackground(Qt::black);
+//    Page->setStyleSheet("QCustomPlot#Page{background-color:rgb(195,195,195)}");
+//    ui->tabWidget->setStyleSheet("background-color:rgb(127,127,127)");
 }
 
 CurveFont::~CurveFont()
@@ -463,20 +477,20 @@ void CurveFont::draw()
     currentPage[numOfPage-1] = Page;
     QString CurveName = "Curve"+QString::number(pageIndex++);
     ui->tabWidget->addTab(Page,CurveName);
-//    if(isFirst)
-//    {
-//        numOfPage++;
-//        currentPage[numOfPage-1] = Page;
-//        QString CurveName = "Curve"+QString::number(numOfPage);
-//        ui->tabWidget->addTab(Page,CurveName);
-//    }
-//    else
-//    {
-//        numOfPage++;
-//        currentPage[numOfPage-1] = Page;
-//        QString CurveName = "Curve"+QString::number(numOfPage);
-//        ui->tabWidget->addTab(Page,CurveName);
-//    }
+    //    if(isFirst)
+    //    {
+    //        numOfPage++;
+    //        currentPage[numOfPage-1] = Page;
+    //        QString CurveName = "Curve"+QString::number(numOfPage);
+    //        ui->tabWidget->addTab(Page,CurveName);
+    //    }
+    //    else
+    //    {
+    //        numOfPage++;
+    //        currentPage[numOfPage-1] = Page;
+    //        QString CurveName = "Curve"+QString::number(numOfPage);
+    //        ui->tabWidget->addTab(Page,CurveName);
+    //    }
     switch (data_reader[numOfPage-1].fileType) {
     case 0:
     {
@@ -501,7 +515,7 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
-//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
@@ -534,17 +548,18 @@ void CurveFont::draw()
             Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
             Page->graph(i)->rescaleAxes();
         }
-//        tracer = new QCPItemTracer(Page);
-//        tracer->setVisible(true);
-//        tracer->setPen(QPen(Qt::DashLine));
-//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        //        tracer = new QCPItemTracer(Page);
+        //        tracer->setVisible(true);
+        //        tracer->setPen(QPen(Qt::DashLine));
+        //        tracer->setStyle(QCPItemTracer::tsCrosshair);
+
         QDateTime now;
         QDate nowDate(data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[0]);
         QTime nowTime(data_reader[numOfPage-1].startTime[3],data_reader[numOfPage-1].startTime[4],data_reader[numOfPage-1].startTime[5]);
         now.setDate(nowDate);
         now.setTime(nowTime);
         double NOW = now.toSecsSinceEpoch();
-//        qDebug()<<NOW;
+        //        qDebug()<<NOW;
         QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
         dateTicker->setDateTimeFormat("yyyy-mm-dd hh:mm:ss");
         Page->xAxis->setTicker(dateTicker);
@@ -576,7 +591,7 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
-//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
@@ -603,27 +618,27 @@ void CurveFont::draw()
                 INDEX=0;
             }
         }
-//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        //        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Page->graph(i)->setPen(color[i]);
             Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
-//            if(i==0||i==1)
-//                Page->graph(i)->rescaleAxes();
-//            else
-//                Page->yAxis2->rescale(true);
+            //            if(i==0||i==1)
+            //                Page->graph(i)->rescaleAxes();
+            //            else
+            //                Page->yAxis2->rescale(true);
         }
-//        tracer = new QCPItemTracer(Page);
-//        tracer->setVisible(true);
-//        tracer->setPen(QPen(Qt::DashLine));
-//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        //        tracer = new QCPItemTracer(Page);
+        //        tracer->setVisible(true);
+        //        tracer->setPen(QPen(Qt::DashLine));
+        //        tracer->setStyle(QCPItemTracer::tsCrosshair);
         Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->yAxis2->setRange(0,100);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
-        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
@@ -651,7 +666,7 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
-//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
@@ -678,27 +693,27 @@ void CurveFont::draw()
                 INDEX=0;
             }
         }
-//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        //        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Page->graph(i)->setPen(color[i]);
             Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
-//            if(i==0||i==1)
-//                Page->graph(i)->rescaleAxes();
-//            else
-//                Page->yAxis2->rescale(true);
+            //            if(i==0||i==1)
+            //                Page->graph(i)->rescaleAxes();
+            //            else
+            //                Page->yAxis2->rescale(true);
         }
-//        tracer = new QCPItemTracer(Page);
-//        tracer->setVisible(true);
-//        tracer->setPen(QPen(Qt::DashLine));
-//        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        //        tracer = new QCPItemTracer(Page);
+        //        tracer->setVisible(true);
+        //        tracer->setPen(QPen(Qt::DashLine));
+        //        tracer->setStyle(QCPItemTracer::tsCrosshair);
         Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->yAxis2->setRange(0,100);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
-        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
@@ -724,20 +739,22 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
+        TimeHMS[numOfPage-1].resize(size);
         QDateTime now;
         QDate nowDate(data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[1],data_reader[numOfPage-1].startTime[2]);
         QTime nowTime(data_reader[numOfPage-1].startTime[3],data_reader[numOfPage-1].startTime[4],data_reader[numOfPage-1].startTime[5]);
         now.setDate(nowDate);
         now.setTime(nowTime);
-        double NOW = now.toSecsSinceEpoch();
-//        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
+        NOW[numOfPage-1] = now.toSecsSinceEpoch();
+        //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Data[numOfPage-1][i].resize(size);
         }
         for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
-            Time[numOfPage-1][i] =NOW + data_reader[numOfPage-1].dataFrequency*i;
+            Time[numOfPage-1][i] =NOW[numOfPage-1] + data_reader[numOfPage-1].dataFrequency*i;
+            TimeHMS[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
         }
         int INDEX = 0;
         int _INDEX = 0;
@@ -757,23 +774,23 @@ void CurveFont::draw()
                 INDEX=0;
             }
         }
-//        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
+        //        qDebug()<<Time[numOfPage-1][0]<<Time[numOfPage-1][1]<<Data[numOfPage-1][2][0]<<Data[numOfPage-1][2][1];
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
             Page->graph(i)->setPen(color[i]);
             Page->graph(i)->addData(Time[numOfPage-1],Data[numOfPage-1][i]);
-//            if(i==0||i==1)
-//                Page->graph(i)->rescaleAxes();
-//            else
-//                Page->yAxis2->rescale(true);
+            //            if(i==0||i==1)
+            //                Page->graph(i)->rescaleAxes();
+            //            else
+            //                Page->yAxis2->rescale(true);
         }
-//        tracer = new QCPItemTracer(Page);
-//        tracer->setVisible(true);
-//        tracer->setPen(QPen(Qt::DashLine));
-//        tracer->setStyle(QCPItemTracer::tsCrosshair);
-//        qDebug()<<NOW;
+        //        tracer = new QCPItemTracer(Page);
+        //        tracer->setVisible(true);
+        //        tracer->setPen(QPen(Qt::DashLine));
+        //        tracer->setStyle(QCPItemTracer::tsCrosshair);
+        //        qDebug()<<NOW;
         QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
-        dateTicker->setDateTimeFormat("yyyy-MM-dd hh:mm:ss");
+        dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
         Page->xAxis->setTicker(dateTicker);
         Page->xAxis->setRange(Time[numOfPage-1][0],Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
@@ -781,7 +798,7 @@ void CurveFont::draw()
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
-        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom|QCP::iSelectPlottables);
+        Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
@@ -797,15 +814,35 @@ void CurveFont::mousemove(QMouseEvent* e)
 {
     int cnt = ui->tabWidget->currentIndex();
     double x = currentPage[cnt]->xAxis->pixelToCoord(e->pos().x());
-    QDateTime now;
-    now.setSecsSinceEpoch(x);
-    QString qTime = now.toString("yyyy-MM-dd hh:mm:ss");
-    for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+    if(isHMS==false)
     {
-        editTime[i]->setText(qTime);
+        QDateTime now;
+        now.setSecsSinceEpoch(x);
+        QString qTime = now.toString("yyyy-MM-dd hh:mm:ss");
+        for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+        {
+            editTime[i]->setText(qTime);
+        }
     }
-//    tracer->setGraph(currentPage[cnt]->graph(0));
-//    tracer->setGraphKey(x);
+    else
+    {
+        int H = x / (60*60);
+        int M = (x- (H * 60 * 60)) / 60;
+        int S = (x - (H * 60 * 60)) - M * 60;
+        QString hour = QString::number(H);
+        if (hour.length() == 1) hour = "0" + hour;
+        QString min = QString::number(M);
+        if (min.length() == 1) min = "0" + min;
+        QString sec = QString::number(S);
+        if (sec.length() == 1) sec = "0" + sec;
+        QString qTime = hour + ":" + min + ":" + sec;
+        for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+        {
+            editTime[i]->setText(qTime);
+        }
+    }
+    //    tracer->setGraph(currentPage[cnt]->graph(0));
+    //    tracer->setGraphKey(x);
     if(!isFirst)
     {
         tracer->setGraph(currentPage[cnt]->graph(0));
@@ -820,7 +857,7 @@ void CurveFont::mousemove(QMouseEvent* e)
         double yValue = tracer->position->value();
         editData[i]->setText(QString::number(yValue));
     }
-//    for()
+    //    for()
     currentPage[cnt]->replot();
 }
 
@@ -837,6 +874,7 @@ void CurveFont::on_tabWidget_currentChanged(int index)
         connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[index]->replot();
         showTrack(index);
+        ui->yMdhms_radiobutton->setChecked(true);
     }
 }
 
@@ -844,10 +882,10 @@ void CurveFont::hideTrack()
 {
     for(int i = 0 ; i<17 ; i++)
     {
-//        qDebug()<<1;
+        //        qDebug()<<1;
         editTime[i]->setVisible(false);
         curveName->button(i)->setVisible(false);
-//        curveName.button(i)->setChecked(false);
+        //        curveName.button(i)->setChecked(false);
         editData[i]->setVisible(false);
         btnColor->button(i)->setVisible(false);
     }
@@ -1226,7 +1264,7 @@ void CurveFont::on_color_1_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_1->setPalette(pal);
     ui->color_1->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1241,7 +1279,7 @@ void CurveFont::on_color_2_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_2->setPalette(pal);
     ui->color_2->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1256,7 +1294,7 @@ void CurveFont::on_color_3_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_3->setPalette(pal);
     ui->color_3->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1271,7 +1309,7 @@ void CurveFont::on_color_4_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_4->setPalette(pal);
     ui->color_4->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1286,7 +1324,7 @@ void CurveFont::on_color_5_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_5->setPalette(pal);
     ui->color_5->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1301,7 +1339,7 @@ void CurveFont::on_color_6_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_6->setPalette(pal);
     ui->color_6->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1316,7 +1354,7 @@ void CurveFont::on_color_7_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_7->setPalette(pal);
     ui->color_7->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1331,7 +1369,7 @@ void CurveFont::on_color_8_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_8->setPalette(pal);
     ui->color_8->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1346,7 +1384,7 @@ void CurveFont::on_color_9_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_9->setPalette(pal);
     ui->color_9->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1361,7 +1399,7 @@ void CurveFont::on_color_10_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_10->setPalette(pal);
     ui->color_10->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1376,7 +1414,7 @@ void CurveFont::on_color_11_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_11->setPalette(pal);
     ui->color_11->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1391,7 +1429,7 @@ void CurveFont::on_color_12_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_12->setPalette(pal);
     ui->color_12->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1406,7 +1444,7 @@ void CurveFont::on_color_13_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_13->setPalette(pal);
     ui->color_13->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1421,7 +1459,7 @@ void CurveFont::on_color_14_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_14->setPalette(pal);
     ui->color_14->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1436,7 +1474,7 @@ void CurveFont::on_color_15_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_15->setPalette(pal);
     ui->color_15->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1451,7 +1489,7 @@ void CurveFont::on_color_16_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_16->setPalette(pal);
     ui->color_16->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1466,7 +1504,7 @@ void CurveFont::on_color_17_clicked()
     pal.setColor(QPalette::Button,c);
     ui->color_17->setPalette(pal);
     ui->color_17->setAutoFillBackground(true);
-//    ui->color_1->setFlat(true);
+    //    ui->color_1->setFlat(true);
     currentPage[cnt]->replot();
 }
 
@@ -1480,7 +1518,7 @@ void CurveFont::on_actionOpenFile_triggered()
     QString fileName = fd->getOpenFileName(this,tr("Open File"),"C:\\Users\\Administrator\\Desktop\\Data",
                                            tr("(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)"));
     if(fileName == "")
-          return;
+        return;
     QDir dir = QDir::current();
     QString path = dir.filePath(fileName);
     QString PATH="";
@@ -1578,6 +1616,14 @@ void CurveFont::on_actionDelete_triggered()
     {
         max[i] = max[i+1];
     }
+    for(int i=cnt ; i<NOW.size()-1 ; i++)
+    {
+        NOW[i] = NOW[i+1];
+    }
+    for(int i=cnt ; i<TimeHMS.size()-1 ; i++)
+    {
+        TimeHMS[i] = TimeHMS[i+1];
+    }
 }
 
 
@@ -1653,7 +1699,7 @@ void CurveFont::on_actionSave_triggered()
         dateTime_.setDate(date_);
         dateTime_.setTime(time_);
         QString strs = "";
-//        QTime frequency(0,0,0);
+        //        QTime frequency(0,0,0);
         QString strs_ = "";
         int DATAFREQUENCY = data_reader[cnt].dataFrequency;
         long bit = 0;
@@ -1702,9 +1748,9 @@ void CurveFont::on_actionSave_triggered()
                 for(bit; (bit/50000)<(k+1) ; bit++)
                 {
                     strs = dateTime_.toString("yyyy-MM-dd hh:mm:ss");
-//                    strs_ = frequency.toString("hh:mm:ss");
+                    //                    strs_ = frequency.toString("hh:mm:ss");
                     dateTime_  =  dateTime_.addSecs(DATAFREQUENCY);
-//                    frequency = frequency.addSecs(DATAFREQUENCY);
+                    //                    frequency = frequency.addSecs(DATAFREQUENCY);
                     in<<'\t'<<strs<<'\t';
                     long x_ = Time[cnt][bit];
                     int H_ = x_ / (60*60);
@@ -2508,5 +2554,51 @@ void CurveFont::on_actionHistoryFile9_triggered()
     }
     label->setText("");
     ui->statusbar->showMessage(tr("完成"),3000);
+}
+
+
+void CurveFont::on_hms_radiobutton_clicked()
+{
+    if(isFirst)
+    {
+        QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+        ui->yMdhms_radiobutton->setChecked(true);
+        return;
+    }
+    isHMS=true;
+    int cnt = ui->tabWidget->currentIndex();
+    for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+    {
+        currentPage[cnt]->graph(i)->data().data()->clear();
+        currentPage[cnt]->graph(i)->addData(TimeHMS[cnt],Data[cnt][i]);
+    }
+    QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+    timeTicker->setTimeFormat("%h:%m:%s");
+    currentPage[cnt]->xAxis->setTicker(timeTicker);
+    currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);
+    currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_yMdhms_radiobutton_clicked()
+{
+    if(isFirst)
+    {
+        QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+        ui->yMdhms_radiobutton->setChecked(true);
+        return;
+    }
+    isHMS=false;
+    int cnt = ui->tabWidget->currentIndex();
+    for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+    {
+        currentPage[cnt]->graph(i)->data().data()->clear();
+        currentPage[cnt]->graph(i)->addData(Time[cnt],Data[cnt][i]);
+    }
+    QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
+    dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
+    currentPage[cnt]->xAxis->setTicker(dateTicker);
+    currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
+    currentPage[cnt]->replot();
 }
 

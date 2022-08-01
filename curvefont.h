@@ -22,20 +22,25 @@ public:
     CurveFont(QWidget *parent = nullptr);
     ~CurveFont();
 
+
     QVector<Data_Reader> data_reader;
     QQueue<QString> historyFile;
     int numOfPage = 0;
     bool isFirst = true;
     QVector<QCustomPlot*> currentPage;
     QVector<QVector<double>> Time;
+    QVector<QVector<double>> TimeHMS;
     QVector<QVector<QVector<double>>> Data;
     QVector<double> min,max;
     QColor* color;
     QCPItemTracer* tracer;
     QButtonGroup* curveName;
     QButtonGroup* btnColor;
+    QButtonGroup* rBtnTimeStyle;
     QVector<QLineEdit*> editData,editTime;
     int pageIndex = 1;
+    QVector<double> NOW;
+    bool isHMS=false;
 
     void closeEvent(QCloseEvent* event);
     void updateHistoryFile();
@@ -154,6 +159,10 @@ private slots:
     void on_actionHistoryFile8_triggered();
 
     void on_actionHistoryFile9_triggered();
+
+    void on_hms_radiobutton_clicked();
+
+    void on_yMdhms_radiobutton_clicked();
 
 private:
     Ui::CurveFont *ui;

@@ -39,3 +39,6 @@ RESOURCES += \
 DISTFILES += \
     language_cn.qm \
     language_en.qm
+
+
+RC_ICONS += Temak.ico

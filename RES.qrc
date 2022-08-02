@@ -13,5 +13,6 @@
         <file>Icon/OpenFile.png</file>
         <file>Icon/Reset.png</file>
         <file>Icon/Save.png</file>
+        <file>Icon/Temak.png</file>
     </qresource>
 </RCC>

@@ -1,10 +1,10 @@
 QMenuBar{
     background-color:rgb(225,225,225);
     border-bottom:2px outset rgb(180,180,180);
-    width:45px;
+    width:60px;
     min-height:20px;
     font-size:12px;
-    letter-spacing:4px;
+    letter-spacing:1px;
 }
 
 QMenuBar::item:selected{

@@ -20,6 +20,8 @@ CurveFont::CurveFont(QWidget *parent)
 {
     ui->setupUi(this);
 
+//    this->setWindowTitle(tr("Temak曲线软件 v1.0"));
+//    this->setWindowIcon(QIcon(":/Image/Icon/Temak.png"));
     tran.load(":/language/language_cn.qm");
     qApp->installTranslator(&tran);
     ui->retranslateUi(this);
@@ -271,6 +273,13 @@ void CurveFont::on_actionOpen_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -301,6 +310,13 @@ void CurveFont::on_actionChinese_triggered()
     QString stylesheet = filetext.readAll();
     this->setStyleSheet(stylesheet);
     file.close();
+
+    if(!isFirst)
+    {
+        int cnt = ui->tabWidget->currentIndex();
+        this->hideTrack();
+        this->showTrack(cnt);
+    }
 }
 
 
@@ -316,6 +332,12 @@ void CurveFont::on_actionEnglish_triggered()
     QString stylesheet = filetext.readAll();
     this->setStyleSheet(stylesheet);
     file.close();
+    if(!isFirst)
+    {
+        int cnt = ui->tabWidget->currentIndex();
+        this->hideTrack();
+        this->showTrack(cnt);
+    }
 }
 
 
@@ -331,6 +353,12 @@ void CurveFont::on_actionTchinese_triggered()
     QString stylesheet = filetext.readAll();
     this->setStyleSheet(stylesheet);
     file.close();
+    if(!isFirst)
+    {
+        int cnt = ui->tabWidget->currentIndex();
+        this->hideTrack();
+        this->showTrack(cnt);
+    }
 }
 
 void CurveFont::updateHistoryFile()
@@ -565,6 +593,8 @@ void CurveFont::draw()
         Page->xAxis->setTicker(dateTicker);
         Page->xAxis->setRange(NOW,NOW+Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        Page->xAxis->ticker()->setTickCount(8);
+        Page->yAxis->ticker()->setTickCount(10);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
@@ -795,10 +825,17 @@ void CurveFont::draw()
         Page->xAxis->setRange(Time[numOfPage-1][0],Time[numOfPage-1][size-1]);
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->yAxis2->setRange(0,100);
+        Page->xAxis->ticker()->setTickCount(9);
+        Page->yAxis->ticker()->setTickCount(10);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
         Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+        QString name__ = data_reader[numOfPage-1].getFileName();
+        QCPTextElement* title;
+        Page->plotLayout()->insertRow(0);
+        title = new QCPTextElement(Page,name__);
+        Page->plotLayout()->addElement(0,0,title);
         Page->replot();
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
@@ -814,6 +851,7 @@ void CurveFont::mousemove(QMouseEvent* e)
 {
     int cnt = ui->tabWidget->currentIndex();
     double x = currentPage[cnt]->xAxis->pixelToCoord(e->pos().x());
+    double y = currentPage[cnt]->yAxis->pixelToCoord(e->pos().y());
     if(isHMS==false)
     {
         QDateTime now;
@@ -849,15 +887,27 @@ void CurveFont::mousemove(QMouseEvent* e)
         tracer->setGraphKey(x);
         tracer->setInterpolating(true);
         tracer->updatePosition();
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),8));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setType(Qt::AlignCenter);
+        tracerLabel->position->setCoords(x,y);
     }
+    QString information;
     for(int i=0 ; i<data_reader[cnt].numOfDataGroup;i++)
     {
         tracer->setGraph(currentPage[cnt]->graph(i));
         tracer->setGraphKey(x);
         double yValue = tracer->position->value();
+        if(i!=(data_reader[cnt].numOfDataGroup-1))
+            information = information+data_reader[cnt].Track_Info[i]+" "+QString::number(yValue)+'\n';
+        else
+            information = information+data_reader[cnt].Track_Info[i]+" "+QString::number(yValue);
         editData[i]->setText(QString::number(yValue));
     }
-    //    for()
+    tracerLabel->setText(information);
     currentPage[cnt]->replot();
 }
 
@@ -867,9 +917,16 @@ void CurveFont::on_tabWidget_currentChanged(int index)
     {
         hideTrack();
         tracer->setVisible(false);
+        tracerLabel->setVisible(false);
         tracer = new QCPItemTracer(currentPage[index]);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[index]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
         ui->tabWidget->setCurrentIndex(index);
         connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[index]->replot();
@@ -1560,6 +1617,12 @@ void CurveFont::on_actionOpenFile_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -1650,7 +1713,7 @@ void CurveFont::on_actionSave_triggered()
             PATH+=path[i];
         }
     }
-    PATH+="\\\\CSV";
+    PATH= PATH+"\\\\Temak-"+data_reader[cnt].getFileName();
     QDir csvdir;
     if(!csvdir.exists(PATH))
     {
@@ -1674,7 +1737,7 @@ void CurveFont::on_actionSave_triggered()
             break;
     }
     PATH+=".csv";
-    int num = Data[cnt][0].size()/50000;
+    int num = Data[cnt][0].size()/65000;
     num+=1;
     QString* SavePath = new QString[num];
     int pathindex = 1;
@@ -1686,7 +1749,7 @@ void CurveFont::on_actionSave_triggered()
             for(int j=0 ; j<PATH.size() ; j++)
             {
                 SavePath[i]+=PATH[j];
-                if(j<PATH.size()-2&&PATH[j+1] == '.')
+                if(j<PATH.size()-2&&PATH[j+1] == '.'&&PATH[j+2]=='c')
                 {
                     SavePath[i]=SavePath[i]+'-'+QString::number(pathindex);
                     pathindex++;
@@ -1700,7 +1763,7 @@ void CurveFont::on_actionSave_triggered()
         dateTime_.setTime(time_);
         QString strs = "";
         //        QTime frequency(0,0,0);
-        QString strs_ = "";
+//        QString strs_ = "";
         int DATAFREQUENCY = data_reader[cnt].dataFrequency;
         long bit = 0;
         for(int k=0 ; k<num ; k++)
@@ -1708,8 +1771,10 @@ void CurveFont::on_actionSave_triggered()
             static QMutex mutex;
             mutex.lock();
             QFile file(SavePath[k]);
+            qDebug()<<SavePath[k];
             if(file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
             {
+//                qDebug()<<3;
                 QTextStream in(&file);
                 in<<"文件路径："<<","<<data_reader[cnt].getFilePath()<<'\n';
                 if(data_reader[cnt].haveStratTime==true)
@@ -1721,14 +1786,14 @@ void CurveFont::on_actionSave_triggered()
                     dateTime.setTime(time);
                     QString strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
                     in<<"时间段："<<","<<'\t'<<strs<<'\t'<<",";
-                    int total = Time[cnt].size();
-                    dateTime = dateTime.addSecs(Time[cnt][total-1]);
+                    int total = TimeHMS[cnt].size();
+                    dateTime = dateTime.addSecs(TimeHMS[cnt][total-1]);
                     strs = "";
                     strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
                     in<<'\t'<<strs<<'\t'<<'\n';
                 }
-                int total = Time[cnt].size();
-                long x = Time[cnt][total-1];
+                int total = TimeHMS[cnt].size();
+                long x = TimeHMS[cnt][total-1];
                 int H = x / (60*60);
                 int M = (x- (H * 60 * 60)) / 60;
                 int S = (x - (H * 60 * 60)) - M * 60;
@@ -1745,14 +1810,14 @@ void CurveFont::on_actionSave_triggered()
                 for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
                     in<<","<<data_reader[cnt].Track_Info[i];
                 in<<'\n';
-                for(bit; (bit/50000)<(k+1) ; bit++)
+                for(bit; (bit/65000)<(k+1) ; bit++)
                 {
                     strs = dateTime_.toString("yyyy-MM-dd hh:mm:ss");
                     //                    strs_ = frequency.toString("hh:mm:ss");
                     dateTime_  =  dateTime_.addSecs(DATAFREQUENCY);
                     //                    frequency = frequency.addSecs(DATAFREQUENCY);
                     in<<'\t'<<strs<<'\t';
-                    long x_ = Time[cnt][bit];
+                    long x_ = TimeHMS[cnt][bit];
                     int H_ = x_ / (60*60);
                     int M_ = (x_- (H_ * 60 * 60)) / 60;
                     int S_ = (x_ - (H_ * 60 * 60)) - M_ * 60;
@@ -1770,6 +1835,7 @@ void CurveFont::on_actionSave_triggered()
                     }
                     in<<'\n';
                 }
+//                qDebug()<<1;
                 file.close();
             }
             mutex.unlock();
@@ -1793,14 +1859,14 @@ void CurveFont::on_actionSave_triggered()
                 dateTime.setTime(time);
                 QString strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
                 in<<"时间段："<<","<<'\t'<<strs<<'\t'<<",";
-                int total = Time[cnt].size();
-                dateTime = dateTime.addSecs(Time[cnt][total-1]);
+                int total = TimeHMS[cnt].size();
+                dateTime = dateTime.addSecs(TimeHMS[cnt][total-1]);
                 strs = "";
                 strs = dateTime.toString("yyyy-MM-dd hh:mm:ss");
                 in<<'\t'<<strs<<'\t'<<'\n';
             }
-            int total = Time[cnt].size();
-            long x = Time[cnt][total-1];
+            int total = TimeHMS[cnt].size();
+            long x = TimeHMS[cnt][total-1];
             int H = x / (60*60);
             int M = (x- (H * 60 * 60)) / 60;
             int S = (x - (H * 60 * 60)) - M * 60;

@@ -34,6 +34,7 @@ public:
     QVector<double> min,max;
     QColor* color;
     QCPItemTracer* tracer;
+    QCPItemText* tracerLabel;
     QButtonGroup* curveName;
     QButtonGroup* btnColor;
     QButtonGroup* rBtnTimeStyle;

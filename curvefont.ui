@@ -64,7 +64,7 @@
           <number>0</number>
          </property>
          <property name="documentMode">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <widget class="QWidget" name="All">
           <attribute name="title">
@@ -130,8 +130,8 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-133</y>
-                <width>521</width>
+                <y>0</y>
+                <width>435</width>
                 <height>510</height>
                </rect>
               </property>
@@ -156,6 +156,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -174,6 +186,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -251,6 +275,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -269,6 +305,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -321,6 +369,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -333,6 +393,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -372,6 +444,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -384,6 +468,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -403,6 +499,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -467,6 +575,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -523,6 +643,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -587,6 +719,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -599,6 +743,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -637,6 +793,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -732,6 +900,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -776,6 +956,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -788,6 +980,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -807,6 +1011,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -846,6 +1062,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -864,6 +1092,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -902,6 +1142,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -985,6 +1237,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -1022,6 +1286,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -1086,6 +1362,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -1105,6 +1393,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -1123,6 +1423,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -1162,6 +1474,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -1174,6 +1498,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -1193,6 +1529,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -1232,6 +1580,18 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -1263,6 +1623,18 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -1340,6 +1712,18 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                  <property name="text">
                   <string>CheckBox</string>
                  </property>
@@ -1387,6 +1771,18 @@
                  <property name="focusPolicy">
                   <enum>Qt::NoFocus</enum>
                  </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="3">
@@ -1402,6 +1798,18 @@
                    <width>70</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string/>
@@ -1421,6 +1829,18 @@
                    <width>0</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="statusTip">
+                  <string notr="true"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleName">
+                  <string notr="true"/>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>CheckBox</string>
@@ -1528,7 +1948,7 @@
           <number>0</number>
          </property>
          <property name="documentMode">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <widget class="QWidget" name="Settings">
           <attribute name="title">
@@ -1598,12 +2018,12 @@
      <rect>
       <x>339</x>
       <y>102</y>
-      <width>120</width>
+      <width>200</width>
       <height>116</height>
      </rect>
     </property>
     <property name="title">
-     <string>文件</string>
+     <string>文件(F)</string>
     </property>
     <widget class="QMenu" name="menu_2">
      <property name="title">
@@ -1625,20 +2045,41 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu">
+    <property name="geometry">
+     <rect>
+      <x>397</x>
+      <y>102</y>
+      <width>160</width>
+      <height>116</height>
+     </rect>
+    </property>
     <property name="title">
-     <string>语言</string>
+     <string>语言(L)</string>
     </property>
     <addaction name="actionChinese"/>
     <addaction name="actionEnglish"/>
     <addaction name="actionTchinese"/>
    </widget>
+   <widget class="QMenu" name="menu_S">
+    <property name="title">
+     <string>说明(S)</string>
+    </property>
+    <addaction name="actionTemak_S"/>
+   </widget>
    <addaction name="File"/>
    <addaction name="menu"/>
+   <addaction name="menu_S"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>38</width>
+     <height>24</height>
+    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -1769,6 +2210,11 @@
    </property>
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionTemak_S">
+   <property name="text">
+    <string>Temak曲线软件说明</string>
    </property>
   </action>
  </widget>

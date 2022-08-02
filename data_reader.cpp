@@ -61,6 +61,27 @@ void Data_Reader::readToMap()
     return;
 }
 
+QString Data_Reader::getFileName()
+{
+    QString path = filePath;
+    QString name;
+    for(int i=path.size()-1; i>0 ; i--)
+    {
+        if(path[i]!='\\')
+        {
+            name+=path[i];
+        }
+        else
+            break;
+    }
+    QString name_;
+    for(int i=name.size()-1 ; i>=0 ; i--)
+    {
+        name_+=name[i];
+    }
+    return name_;
+}
+
 void Data_Reader::judgeFile()
 {
     QString Path = filePath.toLower();

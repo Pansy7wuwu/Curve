@@ -43,6 +43,7 @@ public:
 
     void setFilePath(QString);//设置文件路径
     QString getFilePath();
+    QString getFileName();
     void readToMap();//读取到map
     void judgeFile();//判断文件后缀类别（kdt\sdr\dat）
     void dealData();//处理数据

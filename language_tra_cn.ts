@@ -6,7 +6,7 @@
     <message>
         <location filename="curvefont.ui" line="14"/>
         <source>CurveFont</source>
-        <translation>Temak曲綫軟件 v1.0</translation>
+        <translation type="unfinished">Temak曲綫軟件 v1.1</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="71"/>
@@ -208,27 +208,27 @@
     <message>
         <location filename="curvefont.ui" line="2182"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>打開</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="2185"/>
         <source>OpenFile</source>
-        <translation type="unfinished"></translation>
+        <translation>打開文件</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="2194"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>刪除</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="2203"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>重置</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="2212"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="2217"/>
@@ -236,63 +236,65 @@
         <translation>Temak曲綫軟件説明</translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="225"/>
-        <location filename="curvefont.cpp" line="1572"/>
-        <location filename="curvefont.cpp" line="1929"/>
-        <location filename="curvefont.cpp" line="1999"/>
-        <location filename="curvefont.cpp" line="2069"/>
-        <location filename="curvefont.cpp" line="2139"/>
-        <location filename="curvefont.cpp" line="2209"/>
-        <location filename="curvefont.cpp" line="2279"/>
-        <location filename="curvefont.cpp" line="2349"/>
-        <location filename="curvefont.cpp" line="2419"/>
-        <location filename="curvefont.cpp" line="2489"/>
-        <location filename="curvefont.cpp" line="2559"/>
+        <location filename="curvefont.cpp" line="226"/>
+        <location filename="curvefont.cpp" line="1575"/>
+        <location filename="curvefont.cpp" line="1937"/>
+        <location filename="curvefont.cpp" line="2007"/>
+        <location filename="curvefont.cpp" line="2077"/>
+        <location filename="curvefont.cpp" line="2147"/>
+        <location filename="curvefont.cpp" line="2217"/>
+        <location filename="curvefont.cpp" line="2287"/>
+        <location filename="curvefont.cpp" line="2357"/>
+        <location filename="curvefont.cpp" line="2427"/>
+        <location filename="curvefont.cpp" line="2497"/>
+        <location filename="curvefont.cpp" line="2567"/>
         <source>正在处理，请稍后...</source>
         <translation>正在處理，請稍後...</translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="228"/>
-        <location filename="curvefont.cpp" line="1575"/>
-        <location filename="curvefont.cpp" line="1701"/>
+        <location filename="curvefont.cpp" line="229"/>
+        <location filename="curvefont.cpp" line="1578"/>
+        <location filename="curvefont.cpp" line="1704"/>
         <source>Open File</source>
         <translation>打開文件</translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="229"/>
-        <location filename="curvefont.cpp" line="1576"/>
+        <location filename="curvefont.cpp" line="230"/>
+        <location filename="curvefont.cpp" line="1579"/>
         <source>(*.kdt *.KDT *.DAT *.dat *.SDR *.sdr *.tdt *.TDT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="297"/>
-        <location filename="curvefont.cpp" line="1640"/>
-        <location filename="curvefont.cpp" line="1992"/>
-        <location filename="curvefont.cpp" line="2062"/>
-        <location filename="curvefont.cpp" line="2132"/>
-        <location filename="curvefont.cpp" line="2202"/>
-        <location filename="curvefont.cpp" line="2272"/>
-        <location filename="curvefont.cpp" line="2342"/>
-        <location filename="curvefont.cpp" line="2412"/>
-        <location filename="curvefont.cpp" line="2482"/>
-        <location filename="curvefont.cpp" line="2552"/>
-        <location filename="curvefont.cpp" line="2622"/>
+        <location filename="curvefont.cpp" line="298"/>
+        <location filename="curvefont.cpp" line="1643"/>
+        <location filename="curvefont.cpp" line="2000"/>
+        <location filename="curvefont.cpp" line="2070"/>
+        <location filename="curvefont.cpp" line="2140"/>
+        <location filename="curvefont.cpp" line="2210"/>
+        <location filename="curvefont.cpp" line="2280"/>
+        <location filename="curvefont.cpp" line="2350"/>
+        <location filename="curvefont.cpp" line="2420"/>
+        <location filename="curvefont.cpp" line="2490"/>
+        <location filename="curvefont.cpp" line="2560"/>
+        <location filename="curvefont.cpp" line="2630"/>
         <source>完成</source>
         <translation>完成</translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="1648"/>
-        <location filename="curvefont.cpp" line="1697"/>
-        <location filename="curvefont.cpp" line="2630"/>
-        <location filename="curvefont.cpp" line="2653"/>
+        <location filename="curvefont.cpp" line="1651"/>
+        <location filename="curvefont.cpp" line="1700"/>
+        <location filename="curvefont.cpp" line="1923"/>
+        <location filename="curvefont.cpp" line="2638"/>
+        <location filename="curvefont.cpp" line="2661"/>
         <source>错误</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="curvefont.cpp" line="1648"/>
-        <location filename="curvefont.cpp" line="1697"/>
-        <location filename="curvefont.cpp" line="2630"/>
-        <location filename="curvefont.cpp" line="2653"/>
+        <location filename="curvefont.cpp" line="1651"/>
+        <location filename="curvefont.cpp" line="1700"/>
+        <location filename="curvefont.cpp" line="1923"/>
+        <location filename="curvefont.cpp" line="2638"/>
+        <location filename="curvefont.cpp" line="2661"/>
         <source>当前页面没有数据!</source>
         <translation>當前頁面沒有數據！</translation>
     </message>

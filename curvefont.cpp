@@ -12,6 +12,7 @@
 #include <qcustomplot.h>
 #include <QTabWidget>
 #include <QVector>
+#include <QRegularExpression>
 QTranslator tran;
 
 CurveFont::CurveFont(QWidget *parent)
@@ -503,7 +504,7 @@ void CurveFont::draw()
     QCustomPlot* Page = new QCustomPlot();
     numOfPage++;
     currentPage[numOfPage-1] = Page;
-    QString CurveName = "Curve"+QString::number(pageIndex++);
+    QString CurveName = data_reader[numOfPage-1].getFileName();
     ui->tabWidget->addTab(Page,CurveName);
     //    if(isFirst)
     //    {
@@ -823,7 +824,9 @@ void CurveFont::draw()
         dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
         Page->xAxis->setTicker(dateTicker);
         Page->xAxis->setRange(Time[numOfPage-1][0],Time[numOfPage-1][size-1]);
-        Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
+        max[numOfPage-1] = data_reader[numOfPage-1].TDT_Y_MAX;
+        min[numOfPage-1] =  data_reader[numOfPage-1].TDT_Y_MIN;
+        Page->yAxis->setRange(data_reader[numOfPage-1].TDT_Y_MIN,data_reader[numOfPage-1].TDT_Y_MAX);
         Page->yAxis2->setRange(0,100);
         Page->xAxis->ticker()->setTickCount(9);
         Page->yAxis->ticker()->setTickCount(10);
@@ -891,7 +894,7 @@ void CurveFont::mousemove(QMouseEvent* e)
         tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),8));                   //字体大小
-        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+        tracerLabel->setPadding(QMargins(1,1,1,-10));                        //文字距离边框几个像素
 //        tracerLabel->position->setType(Qt::AlignCenter);
         tracerLabel->position->setCoords(x,y);
     }
@@ -901,10 +904,10 @@ void CurveFont::mousemove(QMouseEvent* e)
         tracer->setGraph(currentPage[cnt]->graph(i));
         tracer->setGraphKey(x);
         double yValue = tracer->position->value();
-        if(i!=(data_reader[cnt].numOfDataGroup-1))
+        if(curveName->button(i)->isChecked())
+        {
             information = information+data_reader[cnt].Track_Info[i]+" "+QString::number(yValue)+'\n';
-        else
-            information = information+data_reader[cnt].Track_Info[i]+" "+QString::number(yValue);
+        }
         editData[i]->setText(QString::number(yValue));
     }
     tracerLabel->setText(information);
@@ -955,7 +958,7 @@ void CurveFont::showTrack(int index)
         editTime[i]->setVisible(true);
         curveName->button(i)->setVisible(true);
         curveName->button(i)->setChecked(true);
-        QString strs = QString::number(i)+". "+data_reader[index].Track_Info[i];
+        QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
         curveName->button(i)->setText(strs);
         editData[i]->setVisible(true);
         btnColor->button(i)->setVisible(true);
@@ -1915,6 +1918,11 @@ void CurveFont::on_actionSave_triggered()
 
 void CurveFont::on_actionReset_triggered()
 {
+    if(isFirst)
+    {
+        QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+        return;
+    }
     int cnt = ui->tabWidget->currentIndex();
     currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
     currentPage[cnt]->yAxis2->setRange(0,100);

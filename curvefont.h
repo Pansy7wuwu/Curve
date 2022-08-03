@@ -42,6 +42,7 @@ public:
     int pageIndex = 1;
     QVector<double> NOW;
     bool isHMS=false;
+    QVector<QMap<int , bool>> TDT_TrackUpdate;
 
     void closeEvent(QCloseEvent* event);
     void updateHistoryFile();

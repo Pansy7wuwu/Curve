@@ -1635,6 +1635,7 @@ void Data_Reader::dealType4()
     TDT_Multiple = (_temp[3]<<24)+(_temp[2]<<16)+(_temp[1]<<8)+_temp[0];
     TDT_Y_MAX /=TDT_Multiple;
     TDT_Y_MIN /=TDT_Multiple;
+    qDebug()<<TDT_Y_MAX<<TDT_Y_MIN<<TDT_Multiple;
     //获取数据频率
     dataFrequency = map.value(23);
     //解析数据

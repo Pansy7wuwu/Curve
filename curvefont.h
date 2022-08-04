@@ -49,6 +49,8 @@ public:
     void draw();
     void showTrack(int);
     void hideTrack();
+    void TDTupdateTrack(int);
+
 
 public slots:
     void mousemove(QMouseEvent* e);
@@ -165,6 +167,8 @@ private slots:
     void on_hms_radiobutton_clicked();
 
     void on_yMdhms_radiobutton_clicked();
+
+    void on_actionTemak_S_triggered();
 
 private:
     Ui::CurveFont *ui;

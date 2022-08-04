@@ -64,6 +64,7 @@ CurveFont::CurveFont(QWidget *parent)
     max.resize(20);
     NOW.resize(20);
     TimeHMS.resize(20);
+    TDT_TrackUpdate.resize(20);
     color = new QColor[36];
 
     for(int i=0 ; i<36 ; i++)
@@ -295,7 +296,7 @@ void CurveFont::on_actionOpen_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -840,6 +841,7 @@ void CurveFont::draw()
         title = new QCPTextElement(Page,name__);
         Page->plotLayout()->addElement(0,0,title);
         Page->replot();
+        TDTupdateTrack(numOfPage-1);
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
             isFirst=false;
@@ -955,23 +957,57 @@ void CurveFont::showTrack(int index)
 {
     for(int i=0 ; i<data_reader[index].numOfDataGroup ; i++)
     {
-        editTime[i]->setVisible(true);
-        curveName->button(i)->setVisible(true);
-        curveName->button(i)->setChecked(true);
-        QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
-        curveName->button(i)->setText(strs);
-        editData[i]->setVisible(true);
-        btnColor->button(i)->setVisible(true);
-        QPalette pal = btnColor->button(i)->palette();
-        pal.setColor(QPalette::Button,color[i]);
-        btnColor->button(i)->setPalette(pal);
-        btnColor->button(i)->setAutoFillBackground(true);
-        editTime[i]->setEnabled(true);
-        editData[i]->setEnabled(true);
-        currentPage[index]->graph(i)->setVisible(true);
+        if(TDT_TrackUpdate[index].size()==0||TDT_TrackUpdate[index].value(i)==true)
+        {
+            editTime[i]->setVisible(true);
+            curveName->button(i)->setVisible(true);
+            curveName->button(i)->setChecked(true);
+            QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+            curveName->button(i)->setText(strs);
+            editData[i]->setVisible(true);
+            btnColor->button(i)->setVisible(true);
+            QPalette pal = btnColor->button(i)->palette();
+            pal.setColor(QPalette::Button,color[i]);
+            btnColor->button(i)->setPalette(pal);
+            btnColor->button(i)->setAutoFillBackground(true);
+            editTime[i]->setEnabled(true);
+            editData[i]->setEnabled(true);
+            currentPage[index]->graph(i)->setVisible(true);
+        }
+        else if(TDT_TrackUpdate[index].value(i)==false)
+        {
+            editTime[i]->setVisible(true);
+            curveName->button(i)->setVisible(true);
+            curveName->button(i)->setChecked(false);
+            QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+            curveName->button(i)->setText(strs);
+            editData[i]->setVisible(true);
+            btnColor->button(i)->setVisible(true);
+            QPalette pal = btnColor->button(i)->palette();
+            pal.setColor(QPalette::Button,color[i]);
+            btnColor->button(i)->setPalette(pal);
+            btnColor->button(i)->setAutoFillBackground(true);
+            editTime[i]->setEnabled(false);
+            editData[i]->setEnabled(false);
+            currentPage[index]->graph(i)->setVisible(false);
+        }
     }
     currentPage[index]->replot();
     ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
+}
+
+void CurveFont::TDTupdateTrack(int index)
+{
+    if(TDT_TrackUpdate[index].size()==0)
+    {
+        TDT_TrackUpdate[index].insert(0,false);
+        TDT_TrackUpdate[index].insert(1,true);
+        TDT_TrackUpdate[index].insert(2,false);
+        TDT_TrackUpdate[index].insert(3,true);
+        TDT_TrackUpdate[index].insert(4,false);
+        TDT_TrackUpdate[index].insert(5,false);
+        TDT_TrackUpdate[index].insert(6,false);
+    }
 }
 
 void CurveFont::on_checkBox_1_clicked()
@@ -983,6 +1019,11 @@ void CurveFont::on_checkBox_1_clicked()
         currentPage[cnt]->replot();
         editData[0]->setEnabled(true);
         editTime[0]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(0);
+            TDT_TrackUpdate[cnt].insert(0,true);
+        }
     }
     else
     {
@@ -990,6 +1031,11 @@ void CurveFont::on_checkBox_1_clicked()
         currentPage[cnt]->replot();
         editData[0]->setEnabled(false);
         editTime[0]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(0);
+            TDT_TrackUpdate[cnt].insert(0,false);
+        }
     }
 }
 
@@ -1003,6 +1049,11 @@ void CurveFont::on_checkBox_2_clicked()
         currentPage[cnt]->replot();
         editData[1]->setEnabled(true);
         editTime[1]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(1);
+            TDT_TrackUpdate[cnt].insert(1,true);
+        }
     }
     else
     {
@@ -1010,6 +1061,11 @@ void CurveFont::on_checkBox_2_clicked()
         currentPage[cnt]->replot();
         editData[1]->setEnabled(false);
         editTime[1]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(1);
+            TDT_TrackUpdate[cnt].insert(1,false);
+        }
     }
 }
 
@@ -1023,6 +1079,11 @@ void CurveFont::on_checkBox_3_clicked()
         currentPage[cnt]->replot();
         editData[2]->setEnabled(true);
         editTime[2]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(2);
+            TDT_TrackUpdate[cnt].insert(2,true);
+        }
     }
     else
     {
@@ -1030,6 +1091,11 @@ void CurveFont::on_checkBox_3_clicked()
         currentPage[cnt]->replot();
         editData[2]->setEnabled(false);
         editTime[2]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(2);
+            TDT_TrackUpdate[cnt].insert(2,false);
+        }
     }
 }
 
@@ -1043,6 +1109,12 @@ void CurveFont::on_checkBox_4_clicked()
         currentPage[cnt]->replot();
         editData[3]->setEnabled(true);
         editTime[3]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(3);
+            TDT_TrackUpdate[cnt].insert(3,true);
+
+        }
     }
     else
     {
@@ -1050,6 +1122,11 @@ void CurveFont::on_checkBox_4_clicked()
         currentPage[cnt]->replot();
         editData[3]->setEnabled(false);
         editTime[3]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(3);
+            TDT_TrackUpdate[cnt].insert(3,false);
+        }
     }
 }
 
@@ -1063,6 +1140,11 @@ void CurveFont::on_checkBox_5_clicked()
         currentPage[cnt]->replot();
         editData[4]->setEnabled(true);
         editTime[4]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(4);
+            TDT_TrackUpdate[cnt].insert(4,true);
+        }
     }
     else
     {
@@ -1070,6 +1152,11 @@ void CurveFont::on_checkBox_5_clicked()
         currentPage[cnt]->replot();
         editData[4]->setEnabled(false);
         editTime[4]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(4);
+            TDT_TrackUpdate[cnt].insert(4,false);
+        }
     }
 }
 
@@ -1083,6 +1170,11 @@ void CurveFont::on_checkBox_6_clicked()
         currentPage[cnt]->replot();
         editData[5]->setEnabled(true);
         editTime[5]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(5);
+            TDT_TrackUpdate[cnt].insert(5,true);
+        }
     }
     else
     {
@@ -1090,6 +1182,11 @@ void CurveFont::on_checkBox_6_clicked()
         currentPage[cnt]->replot();
         editData[5]->setEnabled(false);
         editTime[5]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(5);
+            TDT_TrackUpdate[cnt].insert(5,false);
+        }
     }
 }
 
@@ -1103,6 +1200,11 @@ void CurveFont::on_checkBox_7_clicked()
         currentPage[cnt]->replot();
         editData[6]->setEnabled(true);
         editTime[6]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(6);
+            TDT_TrackUpdate[cnt].insert(6,true);
+        }
     }
     else
     {
@@ -1110,6 +1212,11 @@ void CurveFont::on_checkBox_7_clicked()
         currentPage[cnt]->replot();
         editData[6]->setEnabled(false);
         editTime[6]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(6);
+            TDT_TrackUpdate[cnt].insert(6,false);
+        }
     }
 }
 
@@ -1640,7 +1747,7 @@ void CurveFont::on_actionOpenFile_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -1983,6 +2090,13 @@ void CurveFont::on_actionHistoryFile0_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -1997,7 +2111,7 @@ void CurveFont::on_actionHistoryFile0_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2053,6 +2167,13 @@ void CurveFont::on_actionHistoryFile1_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2067,7 +2188,7 @@ void CurveFont::on_actionHistoryFile1_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2123,6 +2244,13 @@ void CurveFont::on_actionHistoryFile2_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2137,7 +2265,7 @@ void CurveFont::on_actionHistoryFile2_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2193,6 +2321,13 @@ void CurveFont::on_actionHistoryFile3_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2207,7 +2342,7 @@ void CurveFont::on_actionHistoryFile3_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2263,6 +2398,13 @@ void CurveFont::on_actionHistoryFile4_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2277,7 +2419,7 @@ void CurveFont::on_actionHistoryFile4_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2285,7 +2427,6 @@ void CurveFont::on_actionHistoryFile5_triggered()
 {
     QLabel* label = new QLabel(this);
     label->setText(tr("正在处理，请稍后..."));
-    ui->statusbar->addWidget(label);
     QString fileName = ui->actionHistoryFile5->text();
     if(fileName == "")
     {
@@ -2333,6 +2474,13 @@ void CurveFont::on_actionHistoryFile5_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2347,7 +2495,7 @@ void CurveFont::on_actionHistoryFile5_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2403,6 +2551,13 @@ void CurveFont::on_actionHistoryFile6_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2417,7 +2572,7 @@ void CurveFont::on_actionHistoryFile6_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2473,6 +2628,13 @@ void CurveFont::on_actionHistoryFile7_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2487,7 +2649,7 @@ void CurveFont::on_actionHistoryFile7_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2543,6 +2705,13 @@ void CurveFont::on_actionHistoryFile8_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2557,7 +2726,7 @@ void CurveFont::on_actionHistoryFile8_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2613,6 +2782,13 @@ void CurveFont::on_actionHistoryFile9_triggered()
         tracer->setVisible(true);
         tracer->setPen(QPen(Qt::DashLine));
         tracer->setStyle(QCPItemTracer::tsCrosshair);
+        tracerLabel = new QCPItemText(currentPage[0]);
+        tracerLabel->setLayer("overlay");                                  //设置图层为overlay，因为需要频繁刷新
+        tracerLabel->setPen(QPen(Qt::black));                              //设置游标说明颜色
+        tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
+        tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
+        tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
+//        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2627,7 +2803,7 @@ void CurveFont::on_actionHistoryFile9_triggered()
         draw();
     }
     label->setText("");
-    ui->statusbar->showMessage(tr("完成"),3000);
+    ui->statusbar->showMessage(tr("完成"),1000);
 }
 
 
@@ -2674,5 +2850,12 @@ void CurveFont::on_yMdhms_radiobutton_clicked()
     currentPage[cnt]->xAxis->setTicker(dateTicker);
     currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
     currentPage[cnt]->replot();
+}
+
+
+void CurveFont::on_actionTemak_S_triggered()
+{
+    QString strs = "本软件归泰美科环境仪器（昆山）有限公司所有<br>公司网站：<a href='http://www.temak.com.cn/'>http://www.temak.com.cn/</a>";
+    QMessageBox::about(nullptr,"说明",strs);
 }
 

@@ -72,6 +72,10 @@ CurveFont::CurveFont(QWidget *parent)
         QColor c(rand()%256,rand()%256,rand()%256);
         color[i] = c;
     }
+    color[1] = Qt::red;
+    color[0] = Qt::green;
+    color[3] = Qt::blue;
+    color[2] = Qt::yellow;
 
     QCustomPlot* Page = new QCustomPlot();
     ui->tabWidget->addTab(Page,"Curve 1");
@@ -754,16 +758,34 @@ void CurveFont::draw()
     }
     case 4:
     {
-        Page->yAxis->setLabel("Temperature(°C)");
+        Page->yAxis->setLabel(data_reader[numOfPage-1].YAxis_1);
         Page->yAxis2->setVisible(true);
-        Page->yAxis2->setLabel("Humidity(RH%)");
-        Page->addGraph(Page->xAxis,Page->yAxis);
-        Page->addGraph(Page->xAxis,Page->yAxis);
-        Page->addGraph(Page->xAxis,Page->yAxis2);
-        Page->addGraph(Page->xAxis,Page->yAxis2);
-        Page->addGraph(Page->xAxis,Page->yAxis2);
-        Page->addGraph(Page->xAxis,Page->yAxis2);
-        Page->addGraph(Page->xAxis,Page->yAxis2);
+        Page->yAxis2->setLabel(data_reader[numOfPage-1].YAxis_2);
+        if(data_reader[numOfPage-1].numOfDataGroup==7)
+        {
+            Page->addGraph(Page->xAxis,Page->yAxis);
+            Page->addGraph(Page->xAxis,Page->yAxis);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+        }
+        else if(data_reader[numOfPage-1].numOfDataGroup==12)
+        {
+            Page->addGraph(Page->xAxis,Page->yAxis);
+            Page->addGraph(Page->xAxis,Page->yAxis);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->yAxis2);
+        }
         QList<QCPAxis*> axes;
         axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis;
         Page->axisRect()->setRangeZoomAxes(axes);
@@ -936,7 +958,53 @@ void CurveFont::on_tabWidget_currentChanged(int index)
         connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[index]->replot();
         showTrack(index);
-        ui->yMdhms_radiobutton->setChecked(true);
+//        ui->yMdhms_radiobutton->setChecked(true);
+        if(ui->yMdhms_radiobutton->isChecked())
+        {
+            if(isFirst)
+            {
+                QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+                ui->yMdhms_radiobutton->setChecked(true);
+                return;
+            }
+            isHMS=false;
+            int cnt = ui->tabWidget->currentIndex();
+            for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+            {
+                currentPage[cnt]->graph(i)->data().data()->clear();
+                currentPage[cnt]->graph(i)->addData(Time[cnt],Data[cnt][i]);
+            }
+            QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
+            dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
+            currentPage[cnt]->xAxis->setTicker(dateTicker);
+            currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
+            currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
+            currentPage[cnt]->yAxis2->setRange(0,100);
+            currentPage[cnt]->replot();
+        }
+        else if(ui->hms_radiobutton->isChecked())
+        {
+            if(isFirst)
+            {
+                QMessageBox::StandardButton result = QMessageBox::critical(this,tr("错误"),tr("当前页面没有数据!"));
+                ui->yMdhms_radiobutton->setChecked(true);
+                return;
+            }
+            isHMS=true;
+            int cnt = ui->tabWidget->currentIndex();
+            for(int i=0 ; i<data_reader[cnt].numOfDataGroup ; i++)
+            {
+                currentPage[cnt]->graph(i)->data().data()->clear();
+                currentPage[cnt]->graph(i)->addData(TimeHMS[cnt],Data[cnt][i]);
+            }
+            QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+            timeTicker->setTimeFormat("%h:%m:%s");
+            currentPage[cnt]->xAxis->setTicker(timeTicker);
+            currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);
+            currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
+            currentPage[cnt]->yAxis2->setRange(0,100);
+            currentPage[cnt]->replot();
+        }
     }
 }
 
@@ -998,7 +1066,7 @@ void CurveFont::showTrack(int index)
 
 void CurveFont::TDTupdateTrack(int index)
 {
-    if(TDT_TrackUpdate[index].size()==0)
+    if(TDT_TrackUpdate[index].size()==0&&data_reader[index].numOfDataGroup==7)
     {
         TDT_TrackUpdate[index].insert(0,false);
         TDT_TrackUpdate[index].insert(1,true);
@@ -1007,6 +1075,21 @@ void CurveFont::TDTupdateTrack(int index)
         TDT_TrackUpdate[index].insert(4,false);
         TDT_TrackUpdate[index].insert(5,false);
         TDT_TrackUpdate[index].insert(6,false);
+    }
+    else if(TDT_TrackUpdate[index].size()==0&&data_reader[index].numOfDataGroup==12)
+    {
+        TDT_TrackUpdate[index].insert(0,false);
+        TDT_TrackUpdate[index].insert(1,true);
+        TDT_TrackUpdate[index].insert(2,false);
+        TDT_TrackUpdate[index].insert(3,true);
+        TDT_TrackUpdate[index].insert(4,false);
+        TDT_TrackUpdate[index].insert(5,false);
+        TDT_TrackUpdate[index].insert(6,false);
+        TDT_TrackUpdate[index].insert(7,false);
+        TDT_TrackUpdate[index].insert(8,false);
+        TDT_TrackUpdate[index].insert(9,false);
+        TDT_TrackUpdate[index].insert(10,false);
+        TDT_TrackUpdate[index].insert(11,false);
     }
 }
 
@@ -1230,6 +1313,11 @@ void CurveFont::on_checkBox_8_clicked()
         currentPage[cnt]->replot();
         editData[7]->setEnabled(true);
         editTime[7]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(7);
+            TDT_TrackUpdate[cnt].insert(7,true);
+        }
     }
     else
     {
@@ -1237,6 +1325,11 @@ void CurveFont::on_checkBox_8_clicked()
         currentPage[cnt]->replot();
         editData[7]->setEnabled(false);
         editTime[7]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(7);
+            TDT_TrackUpdate[cnt].insert(7,false);
+        }
     }
 }
 
@@ -1250,6 +1343,11 @@ void CurveFont::on_checkBox_9_clicked()
         currentPage[cnt]->replot();
         editData[8]->setEnabled(true);
         editTime[8]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(8);
+            TDT_TrackUpdate[cnt].insert(8,true);
+        }
     }
     else
     {
@@ -1257,6 +1355,11 @@ void CurveFont::on_checkBox_9_clicked()
         currentPage[cnt]->replot();
         editData[8]->setEnabled(false);
         editTime[8]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(8);
+            TDT_TrackUpdate[cnt].insert(8,false);
+        }
     }
 }
 
@@ -1270,6 +1373,11 @@ void CurveFont::on_checkBox_10_clicked()
         currentPage[cnt]->replot();
         editData[9]->setEnabled(true);
         editTime[9]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(9);
+            TDT_TrackUpdate[cnt].insert(9,true);
+        }
     }
     else
     {
@@ -1277,6 +1385,11 @@ void CurveFont::on_checkBox_10_clicked()
         currentPage[cnt]->replot();
         editData[9]->setEnabled(false);
         editTime[9]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(9);
+            TDT_TrackUpdate[cnt].insert(9,false);
+        }
     }
 }
 
@@ -1290,6 +1403,11 @@ void CurveFont::on_checkBox_11_clicked()
         currentPage[cnt]->replot();
         editData[10]->setEnabled(true);
         editTime[10]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(10);
+            TDT_TrackUpdate[cnt].insert(10,true);
+        }
     }
     else
     {
@@ -1297,6 +1415,11 @@ void CurveFont::on_checkBox_11_clicked()
         currentPage[cnt]->replot();
         editData[10]->setEnabled(false);
         editTime[10]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(10);
+            TDT_TrackUpdate[cnt].insert(10,false);
+        }
     }
 }
 
@@ -1310,6 +1433,11 @@ void CurveFont::on_checkBox_12_clicked()
         currentPage[cnt]->replot();
         editData[11]->setEnabled(true);
         editTime[11]->setEnabled(true);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(11);
+            TDT_TrackUpdate[cnt].insert(11,true);
+        }
     }
     else
     {
@@ -1317,6 +1445,11 @@ void CurveFont::on_checkBox_12_clicked()
         currentPage[cnt]->replot();
         editData[11]->setEnabled(false);
         editTime[11]->setEnabled(false);
+        if(TDT_TrackUpdate[cnt].size()!=0)
+        {
+            TDT_TrackUpdate[cnt].remove(11);
+            TDT_TrackUpdate[cnt].insert(11,false);
+        }
     }
 }
 
@@ -2033,7 +2166,12 @@ void CurveFont::on_actionReset_triggered()
     int cnt = ui->tabWidget->currentIndex();
     currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
     currentPage[cnt]->yAxis2->setRange(0,100);
-    currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
+    if(isHMS==true)
+    {
+        currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);
+    }
+    else
+        currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
     currentPage[cnt]->replot();
 }
 
@@ -2826,6 +2964,8 @@ void CurveFont::on_hms_radiobutton_clicked()
     timeTicker->setTimeFormat("%h:%m:%s");
     currentPage[cnt]->xAxis->setTicker(timeTicker);
     currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);
+    currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
+    currentPage[cnt]->yAxis2->setRange(0,100);
     currentPage[cnt]->replot();
 }
 
@@ -2849,6 +2989,8 @@ void CurveFont::on_yMdhms_radiobutton_clicked()
     dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
     currentPage[cnt]->xAxis->setTicker(dateTicker);
     currentPage[cnt]->xAxis->setRange(Time[cnt][0],Time[cnt][(Time[cnt].size()-1)]);
+    currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
+    currentPage[cnt]->yAxis2->setRange(0,100);
     currentPage[cnt]->replot();
 }
 

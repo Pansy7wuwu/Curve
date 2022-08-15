@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET = language
+TARGET = TemakCurveSoftware-v1.0
 TRANSLATIONS = language_cn.ts\
                 language_en.ts\
                 language_tra_cn.ts

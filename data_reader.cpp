@@ -1581,163 +1581,325 @@ void Data_Reader::dealType3()
     qDebug()<<"警告未知文件后缀!";
 }
 
+void Data_Reader::judgeTDTType()
+{
+    if(map.isEmpty())
+        readToMap();
+    int bit128,bit130;
+    bit128 = map.value(128);
+    bit130 = map.value(130);
+    if(bit128 == 2 && bit130 ==7)
+        TDTType = 0;
+    else if(bit128 == 3 && bit130 == 12)
+        TDTType = 1;
+}
+
 void Data_Reader::dealType4()
 {
     if(map.isEmpty())
         readToMap();
     getType0StartBit();
-    //Y轴内容
-    numOfYAxis = 2;
-    YAxis_Info = new QString[2];
-    YAxis_Info[0] = "Temperture(°C)";
-    YAxis_Info[0] = "Humidity(RH%)";
-    //数据组数
-    numOfDataGroup = 7;
-    Track_Info = new QString[numOfDataGroup];
-    Track_Info[0] = "Temperature SV(°C)";
-    Track_Info[1] = "Temperature PV(°C)";
-    Track_Info[2] = "Humidity SV(RH%)";
-    Track_Info[3] = "Humidity PV(RH%)";
-    Track_Info[4] = "Temp PID(%)";
-    Track_Info[5] = "Humi PID(%)";
-    Track_Info[6] = "Svr PID(%)";
-    //获取时间
-    haveStratTime = true;
-    short year[2];
-    year[0] = map.value(16);
-    year[1] = map.value(17);
-    startTime[0] = (year[1]<<8)+year[0];
-    startTime[1] = map.value(18);
-    startTime[2] = map.value(19);
-    startTime[3] = map.value(20);
-    startTime[4] = map.value(21);
-    startTime[5] = map.value(22);
-    //Y轴最大值
-    int temp[4];
-    temp[0] = map.value(208);
-    temp[1] = map.value(209);
-    temp[2] = map.value(210);
-    temp[3] = map.value(211);
-    TDT_Y_MAX = (temp[3]<<24)+(temp[2]<<16)+(temp[1]<<8)+temp[0];
-    //Y轴最小值
-    int temp_[4];
-    temp_[0] = map.value(212);
-    temp_[1] = map.value(213);
-    temp_[2] = map.value(214);
-    temp_[3] = map.value(215);
-    TDT_Y_MIN = (temp_[3]<<24)+(temp_[2]<<16)+(temp_[1]<<8)+temp_[0];
-    //数据倍数
-    int _temp[4];
-    _temp[0] = map.value(216);
-    _temp[1] = map.value(217);
-    _temp[2] = map.value(218);
-    _temp[3] = map.value(219);
-    TDT_Multiple = (_temp[3]<<24)+(_temp[2]<<16)+(_temp[1]<<8)+_temp[0];
-    TDT_Y_MAX /=TDT_Multiple;
-    TDT_Y_MIN /=TDT_Multiple;
-    qDebug()<<TDT_Y_MAX<<TDT_Y_MIN<<TDT_Multiple;
-    //获取数据频率
-    dataFrequency = map.value(23);
-    //解析数据
-    int bit = startBit;
-    short dataTemp[2];
-    QMap<long long,int>::Iterator iter = map.end();
-    iter--;
-    short actualdata;
-    float relitydata;
-    int index = 0;
-    int index_ = 0;
-    while(bit<=iter.key())
+    judgeTDTType();
+    switch (TDTType) {
+    case 0:
     {
-        if((iter.key()-bit)>=512)
+        YAxis_1 = "Temperature(°C)";
+        YAxis_2 = "Humidity(RH%)";
+        //Y轴内容
+        numOfYAxis = 2;
+        YAxis_Info = new QString[2];
+        YAxis_Info[0] = "Temperture(°C)";
+        YAxis_Info[1] = "Humidity(RH%)";
+        //数据组数
+        numOfDataGroup = 7;
+        Track_Info = new QString[numOfDataGroup];
+        Track_Info[0] = "Temperature SV(°C)";
+        Track_Info[1] = "Temperature PV(°C)";
+        Track_Info[2] = "Humidity SV(RH%)";
+        Track_Info[3] = "Humidity PV(RH%)";
+        Track_Info[4] = "Temp PID(%)";
+        Track_Info[5] = "Humi PID(%)";
+        Track_Info[6] = "Svr PID(%)";
+        //获取时间
+        haveStratTime = true;
+        short year[2];
+        year[0] = map.value(16);
+        year[1] = map.value(17);
+        startTime[0] = (year[1]<<8)+year[0];
+        startTime[1] = map.value(18);
+        startTime[2] = map.value(19);
+        startTime[3] = map.value(20);
+        startTime[4] = map.value(21);
+        startTime[5] = map.value(22);
+        //Y轴最大值
+        int temp[4];
+        temp[0] = map.value(208);
+        temp[1] = map.value(209);
+        temp[2] = map.value(210);
+        temp[3] = map.value(211);
+        TDT_Y_MAX = (temp[3]<<24)+(temp[2]<<16)+(temp[1]<<8)+temp[0];
+        //Y轴最小值
+        int temp_[4];
+        temp_[0] = map.value(212);
+        temp_[1] = map.value(213);
+        temp_[2] = map.value(214);
+        temp_[3] = map.value(215);
+        TDT_Y_MIN = (temp_[3]<<24)+(temp_[2]<<16)+(temp_[1]<<8)+temp_[0];
+        //数据倍数
+        int _temp[4];
+        _temp[0] = map.value(216);
+        _temp[1] = map.value(217);
+        _temp[2] = map.value(218);
+        _temp[3] = map.value(219);
+        TDT_Multiple = (_temp[3]<<24)+(_temp[2]<<16)+(_temp[1]<<8)+_temp[0];
+        TDT_Y_MAX /=TDT_Multiple;
+        TDT_Y_MIN /=TDT_Multiple;
+        qDebug()<<TDT_Y_MAX<<TDT_Y_MIN<<TDT_Multiple;
+        //获取数据频率
+        dataFrequency = map.value(23);
+        //解析数据
+        int bit = startBit;
+        short dataTemp[2];
+        QMap<long long,int>::Iterator iter = map.end();
+        iter--;
+        short actualdata;
+        float relitydata;
+        int index = 0;
+        int index_ = 0;
+        while(bit<=iter.key())
         {
-            for(int i=0 ; i<36 ; i++)
+            if((iter.key()-bit)>=512)
             {
-                Processed_Time.insert(index_,dataFrequency*index_);
-                index_++;
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/100*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/100*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/10*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/10*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
+                for(int i=0 ; i<36 ; i++)
+                {
+                    Processed_Time.insert(index_,dataFrequency*index_);
+                    index_++;
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/100*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/100*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/10*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/10*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                }
+                bit+=8;
             }
-            bit+=8;
-        }
-        else
-        {
-            while((iter.key()-bit)>14)
+            else
             {
-                Processed_Time.insert(index_,dataFrequency*index_);
-                index_++;
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/100*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/100*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/10*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0/10*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
-                dataTemp[0] = map.value(bit++);
-                dataTemp[1] = map.value(bit++);
-                actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                relitydata = actualdata*1.0;
-                Processed_Data.insert(index++,relitydata);
+                while((iter.key()-bit)>14)
+                {
+                    Processed_Time.insert(index_,dataFrequency*index_);
+                    index_++;
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/100*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/100*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/10*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0/10*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                    dataTemp[0] = map.value(bit++);
+                    dataTemp[1] = map.value(bit++);
+                    actualdata = (dataTemp[1]<<8)+dataTemp[0];
+                    relitydata = actualdata*1.0;
+                    Processed_Data.insert(index++,relitydata);
+                }
+                break;
             }
-            break;
         }
+        break;
     }
+    case 1:
+    {
+        YAxis_1 = "Temperature(°C)";
+        YAxis_2 = "Humidity(RH%)/Irradiance(%)";
+        //Y轴内容
+        numOfYAxis = 2;
+        YAxis_Info = new QString[3];
+        YAxis_Info[0] = "Temperture(°C)";
+        YAxis_Info[1] = "Humidity(RH%)";
+        YAxis_Info[2] = "Irradiance(%)";
+        //数据组数
+        numOfDataGroup = 12;
+        Track_Info = new QString[numOfDataGroup];
+        Track_Info[0] = "Temperature SV(°C)";
+        Track_Info[1] = "Temperature PV(°C)";
+        Track_Info[2] = "Humidity SV(RH%)";
+        Track_Info[3] = "Humidity PV(RH%)";
+        Track_Info[4] = "SunShine SV(W/m^2)";
+        Track_Info[5] = "SunShine PV(W/m^2)";
+        Track_Info[6] = "BlkTemp SV(°C)";
+        Track_Info[7] = "BlkTemp PV(°C)";
+        Track_Info[8] = "Temp PID(%)";
+        Track_Info[9] = "Humi PID(%)";
+        Track_Info[10] = "Svr PID(%)";
+        Track_Info[11] = "Sun PID(%)";
+        //获取时间
+        haveStratTime = true;
+        short year[2];
+        year[0] = map.value(16);
+        year[1] = map.value(17);
+        startTime[0] = (year[1]<<8)+year[0];
+        startTime[1] = map.value(18);
+        startTime[2] = map.value(19);
+        startTime[3] = map.value(20);
+        startTime[4] = map.value(21);
+        startTime[5] = map.value(22);
+        //Y轴最大值
+        int temp[4];
+        temp[0] = map.value(208);
+        temp[1] = map.value(209);
+        temp[2] = map.value(210);
+        temp[3] = map.value(211);
+        TDT_Y_MAX = (temp[3]<<24)+(temp[2]<<16)+(temp[1]<<8)+temp[0];
+        //Y轴最小值
+        int temp_[4];
+        temp_[0] = map.value(212);
+        temp_[1] = map.value(213);
+        temp_[2] = map.value(214);
+        temp_[3] = map.value(215);
+        TDT_Y_MIN = (temp_[3]<<24)+(temp_[2]<<16)+(temp_[1]<<8)+temp_[0];
+        //数据倍数
+        int _temp[4];
+        _temp[0] = map.value(216);
+        _temp[1] = map.value(217);
+        _temp[2] = map.value(218);
+        _temp[3] = map.value(219);
+        TDT_Multiple = (_temp[3]<<24)+(_temp[2]<<16)+(_temp[1]<<8)+_temp[0];
+        TDT_Y_MAX /=TDT_Multiple;
+        TDT_Y_MIN /=TDT_Multiple;
+        //获取数据频率
+        dataFrequency = map.value(23);
+        //解析数据
+        int bit = startBit;
+        short dataTemp[2];
+        QMap<long long,int>::Iterator iter = map.end();
+        iter--;
+        short actualdata;
+        float relitydata;
+        int index = 0;
+        int index_ = 0;
+        while(bit<=iter.key())
+        {
+            Processed_Time.insert(index_,dataFrequency*index_);
+            index_++;
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/100*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/100*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            relitydata = actualdata*1.0;
+            Processed_Data.insert(index++,relitydata);
+        }
+        break;
+    }
+    default:
+        break;
+    }
+
 }
 
 QString Data_Reader::getFilePath()

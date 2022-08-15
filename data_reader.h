@@ -40,6 +40,9 @@ public:
     int TDT_Y_MIN;
     int TDT_Multiple;
     bool haveStratTime = false;
+    QString YAxis_1 = "";
+    QString YAxis_2 = "";
+    int TDTType;
 
     void setFilePath(QString);//设置文件路径
     QString getFilePath();
@@ -55,6 +58,7 @@ public:
     void dealType2();//处理dat数据
     void judgeDatType();//判断dat类别
     void dealType3();//处理未知文件类别
+    void judgeTDTType();
     void dealType4();
 
 private:

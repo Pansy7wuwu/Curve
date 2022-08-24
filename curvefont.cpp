@@ -21,8 +21,8 @@ CurveFont::CurveFont(QWidget *parent)
 {
     ui->setupUi(this);
 
-//    this->setWindowTitle(tr("Temak曲线软件 v1.0"));
-//    this->setWindowIcon(QIcon(":/Image/Icon/Temak.png"));
+    //    this->setWindowTitle(tr("Temak曲线软件 v1.0"));
+    //    this->setWindowIcon(QIcon(":/Image/Icon/Temak.png"));
     tran.load(":/language/language_cn.qm");
     qApp->installTranslator(&tran);
     ui->retranslateUi(this);
@@ -65,6 +65,7 @@ CurveFont::CurveFont(QWidget *parent)
     NOW.resize(20);
     TimeHMS.resize(20);
     TDT_TrackUpdate.resize(20);
+    SDR_TrackUpdate.resize(20);
     color = new QColor[36];
 
     for(int i=0 ; i<36 ; i++)
@@ -76,6 +77,7 @@ CurveFont::CurveFont(QWidget *parent)
     color[0] = Qt::green;
     color[3] = Qt::blue;
     color[2] = Qt::yellow;
+    color[4] = Qt::cyan;
 
     QCustomPlot* Page = new QCustomPlot();
     ui->tabWidget->addTab(Page,"Curve 1");
@@ -179,13 +181,13 @@ CurveFont::CurveFont(QWidget *parent)
     rBtnTimeStyle->button(1)->setChecked(true);
     ui->scrollAreaWidgetContents->setMinimumHeight(100);
 
-//    ui->centralwidget->setStyleSheet("QWidget#centralwidget{background-color:rgb(127,127,127)}");
-//    ui->All->setStyleSheet("QWidget#All{background-color:rgb(195,195,195)}");
-//    ui->Curve_Info->setStyleSheet("QTabWidget#Curve_Info{border:none}");
-//    ui->Settings->setStyleSheet("QWidget#Settings{background-color:rgb(195,195,195)}");
-//    Page->axisRect()->setBackground(Qt::black);
-//    Page->setStyleSheet("QCustomPlot#Page{background-color:rgb(195,195,195)}");
-//    ui->tabWidget->setStyleSheet("background-color:rgb(127,127,127)");
+    //    ui->centralwidget->setStyleSheet("QWidget#centralwidget{background-color:rgb(127,127,127)}");
+    //    ui->All->setStyleSheet("QWidget#All{background-color:rgb(195,195,195)}");
+    //    ui->Curve_Info->setStyleSheet("QTabWidget#Curve_Info{border:none}");
+    //    ui->Settings->setStyleSheet("QWidget#Settings{background-color:rgb(195,195,195)}");
+    //    Page->axisRect()->setBackground(Qt::black);
+    //    Page->setStyleSheet("QCustomPlot#Page{background-color:rgb(195,195,195)}");
+    //    ui->tabWidget->setStyleSheet("background-color:rgb(127,127,127)");
 }
 
 CurveFont::~CurveFont()
@@ -285,7 +287,7 @@ void CurveFont::on_actionOpen_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -627,6 +629,13 @@ void CurveFont::draw()
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
         int size = data_reader[numOfPage-1].Processed_Data.size()/data_reader[numOfPage-1].numOfDataGroup;
         Time[numOfPage-1].resize(size);
+        TimeHMS[numOfPage-1].resize(size);
+        QDateTime now;
+        QDate nowDate(data_reader[numOfPage-1].startTime[0],data_reader[numOfPage-1].startTime[1],data_reader[numOfPage-1].startTime[2]);
+        QTime nowTime(data_reader[numOfPage-1].startTime[3],data_reader[numOfPage-1].startTime[4],data_reader[numOfPage-1].startTime[5]);
+        now.setDate(nowDate);
+        now.setTime(nowTime);
+        NOW[numOfPage-1] = now.toSecsSinceEpoch();
         //        qDebug()<<data_reader[numOfPage-1].Processed_Data.size()<<data_reader[numOfPage-1].numOfDataGroup<<size<<data_reader[numOfPage-1].Processed_Time.size();
         for(int i=0 ; i<data_reader[numOfPage-1].numOfDataGroup ; i++)
         {
@@ -634,7 +643,8 @@ void CurveFont::draw()
         }
         for(int i=0 ; i<data_reader[numOfPage-1].Processed_Data.size()/4 ; i++)
         {
-            Time[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
+            Time[numOfPage-1][i] =NOW[numOfPage-1] + data_reader[numOfPage-1].dataFrequency*i;
+            TimeHMS[numOfPage-1][i] = data_reader[numOfPage-1].dataFrequency*i;
         }
         int INDEX = 0;
         int _INDEX = 0;
@@ -668,14 +678,25 @@ void CurveFont::draw()
         //        tracer->setVisible(true);
         //        tracer->setPen(QPen(Qt::DashLine));
         //        tracer->setStyle(QCPItemTracer::tsCrosshair);
-        Page->xAxis->setRange(0,Time[numOfPage-1][size-1]);
+        QSharedPointer<QCPAxisTickerDateTime>  dateTicker(new QCPAxisTickerDateTime);
+        dateTicker->setDateTimeFormat("yyyy-MM-dd\nhh:mm:ss");
+        Page->xAxis->setTicker(dateTicker);
+        Page->xAxis->setRange(Time[numOfPage-1][0],Time[numOfPage-1][size-1]);
+        min[numOfPage-1]=data_reader[numOfPage-1].minTemperature/data_reader[numOfPage-1].sdrTemperatureMultiple;
+        max[numOfPage-1]=data_reader[numOfPage-1].maxTemperature/data_reader[numOfPage-1].sdrTemperatureMultiple;
         Page->yAxis->setRange(min[numOfPage-1],max[numOfPage-1]);
         Page->yAxis2->setRange(0,100);
         Page->selectionRect()->setPen(QPen(Qt::black,1,Qt::DashLine));//设置选框的样式：虚线
         Page->selectionRect()->setBrush(QBrush(QColor(0,0,100,50)));//设置选框的样式：半透明浅蓝
         Page->setSelectionRectMode(QCP::SelectionRectMode::srmZoom);
         Page->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+        QString name__ = data_reader[numOfPage-1].getFileName();
+        QCPTextElement* title;
+        Page->plotLayout()->insertRow(0);
+        title = new QCPTextElement(Page,name__);
+        Page->plotLayout()->addElement(0,0,title);
         Page->replot();
+        SDRupdateTrack(numOfPage-1);
         ui->tabWidget->setCurrentIndex(numOfPage-1);
         if(isFirst)
             isFirst=false;
@@ -763,6 +784,28 @@ void CurveFont::draw()
         Page->yAxis2->setLabel(data_reader[numOfPage-1].YAxis_2);
         if(data_reader[numOfPage-1].numOfDataGroup==7)
         {
+            Page->axisRect()->addAxis(QCPAxis::atRight);
+            Page->axisRect()->addAxis(QCPAxis::atLeft);
+            Page->axisRect()->addAxes(QCPAxis::atRight);
+            Page->axisRect()->axis(QCPAxis::atRight,0)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,0)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabel("SunShine(W/M^2)");
+            Page->axisRect()->axis(QCPAxis::atLeft,0)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atLeft,0)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabel("BlkTemp(°C)");
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabel("PID(%)");
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setRange(0,100);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setVisible(false);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setVisible(false);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setVisible(false);
             Page->addGraph(Page->xAxis,Page->yAxis);
             Page->addGraph(Page->xAxis,Page->yAxis);
             Page->addGraph(Page->xAxis,Page->yAxis2);
@@ -773,21 +816,40 @@ void CurveFont::draw()
         }
         else if(data_reader[numOfPage-1].numOfDataGroup==12)
         {
+            Page->axisRect()->addAxis(QCPAxis::atRight);
+            Page->axisRect()->addAxis(QCPAxis::atLeft);
+            Page->axisRect()->addAxes(QCPAxis::atRight);
+            Page->axisRect()->axis(QCPAxis::atRight,0)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,0)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
+            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabel("SunShine(W/M^2)");
+            Page->axisRect()->axis(QCPAxis::atLeft,0)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atLeft,0)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabel("BlkTemp(°C)");
+            Page->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setPadding(1);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabelPadding(0);
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabel("PID(%)");
+            Page->axisRect()->axis(QCPAxis::atRight,2)->setRange(0,100);
             Page->addGraph(Page->xAxis,Page->yAxis);
             Page->addGraph(Page->xAxis,Page->yAxis);
             Page->addGraph(Page->xAxis,Page->yAxis2);
             Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atLeft,1));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atLeft,1));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
+            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
         }
         QList<QCPAxis*> axes;
-        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis;
+        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis<<Page->axisRect()->axis(QCPAxis::atRight,1)<<Page->axisRect()->axis(QCPAxis::atLeft,1);
         Page->axisRect()->setRangeZoomAxes(axes);
         Page->axisRect()->setRangeDragAxes(axes);
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
@@ -919,7 +981,7 @@ void CurveFont::mousemove(QMouseEvent* e)
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),8));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,-10));                        //文字距离边框几个像素
-//        tracerLabel->position->setType(Qt::AlignCenter);
+        //        tracerLabel->position->setType(Qt::AlignCenter);
         tracerLabel->position->setCoords(x,y);
     }
     QString information;
@@ -958,7 +1020,7 @@ void CurveFont::on_tabWidget_currentChanged(int index)
         connect(currentPage[index],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[index]->replot();
         showTrack(index);
-//        ui->yMdhms_radiobutton->setChecked(true);
+        //        ui->yMdhms_radiobutton->setChecked(true);
         if(ui->yMdhms_radiobutton->isChecked())
         {
             if(isFirst)
@@ -1023,45 +1085,94 @@ void CurveFont::hideTrack()
 
 void CurveFont::showTrack(int index)
 {
-    for(int i=0 ; i<data_reader[index].numOfDataGroup ; i++)
+    switch (data_reader[index].fileType) {
+    case 4:
     {
-        if(TDT_TrackUpdate[index].size()==0||TDT_TrackUpdate[index].value(i)==true)
+        for(int i=0 ; i<data_reader[index].numOfDataGroup ; i++)
         {
-            editTime[i]->setVisible(true);
-            curveName->button(i)->setVisible(true);
-            curveName->button(i)->setChecked(true);
-            QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
-            curveName->button(i)->setText(strs);
-            editData[i]->setVisible(true);
-            btnColor->button(i)->setVisible(true);
-            QPalette pal = btnColor->button(i)->palette();
-            pal.setColor(QPalette::Button,color[i]);
-            btnColor->button(i)->setPalette(pal);
-            btnColor->button(i)->setAutoFillBackground(true);
-            editTime[i]->setEnabled(true);
-            editData[i]->setEnabled(true);
-            currentPage[index]->graph(i)->setVisible(true);
+            if(TDT_TrackUpdate[index].size()==0||TDT_TrackUpdate[index].value(i)==true)
+            {
+                editTime[i]->setVisible(true);
+                curveName->button(i)->setVisible(true);
+                curveName->button(i)->setChecked(true);
+                QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+                curveName->button(i)->setText(strs);
+                editData[i]->setVisible(true);
+                btnColor->button(i)->setVisible(true);
+                QPalette pal = btnColor->button(i)->palette();
+                pal.setColor(QPalette::Button,color[i]);
+                btnColor->button(i)->setPalette(pal);
+                btnColor->button(i)->setAutoFillBackground(true);
+                editTime[i]->setEnabled(true);
+                editData[i]->setEnabled(true);
+                currentPage[index]->graph(i)->setVisible(true);
+            }
+            else if(TDT_TrackUpdate[index].value(i)==false)
+            {
+                editTime[i]->setVisible(true);
+                curveName->button(i)->setVisible(true);
+                curveName->button(i)->setChecked(false);
+                QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+                curveName->button(i)->setText(strs);
+                editData[i]->setVisible(true);
+                btnColor->button(i)->setVisible(true);
+                QPalette pal = btnColor->button(i)->palette();
+                pal.setColor(QPalette::Button,color[i]);
+                btnColor->button(i)->setPalette(pal);
+                btnColor->button(i)->setAutoFillBackground(true);
+                editTime[i]->setEnabled(false);
+                editData[i]->setEnabled(false);
+                currentPage[index]->graph(i)->setVisible(false);
+            }
         }
-        else if(TDT_TrackUpdate[index].value(i)==false)
-        {
-            editTime[i]->setVisible(true);
-            curveName->button(i)->setVisible(true);
-            curveName->button(i)->setChecked(false);
-            QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
-            curveName->button(i)->setText(strs);
-            editData[i]->setVisible(true);
-            btnColor->button(i)->setVisible(true);
-            QPalette pal = btnColor->button(i)->palette();
-            pal.setColor(QPalette::Button,color[i]);
-            btnColor->button(i)->setPalette(pal);
-            btnColor->button(i)->setAutoFillBackground(true);
-            editTime[i]->setEnabled(false);
-            editData[i]->setEnabled(false);
-            currentPage[index]->graph(i)->setVisible(false);
-        }
+        currentPage[index]->replot();
+        ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
+        break;
     }
-    currentPage[index]->replot();
-    ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
+    case 1:
+    {
+        for(int i=0 ; i<data_reader[index].numOfDataGroup ; i++)
+        {
+            if(SDR_TrackUpdate[index].size()==0||SDR_TrackUpdate[index].value(i)==true)
+            {
+                editTime[i]->setVisible(true);
+                curveName->button(i)->setVisible(true);
+                curveName->button(i)->setChecked(true);
+                QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+                curveName->button(i)->setText(strs);
+                editData[i]->setVisible(true);
+                btnColor->button(i)->setVisible(true);
+                QPalette pal = btnColor->button(i)->palette();
+                pal.setColor(QPalette::Button,color[i]);
+                btnColor->button(i)->setPalette(pal);
+                btnColor->button(i)->setAutoFillBackground(true);
+                editTime[i]->setEnabled(true);
+                editData[i]->setEnabled(true);
+                currentPage[index]->graph(i)->setVisible(true);
+            }
+            else if(SDR_TrackUpdate[index].value(i)==false)
+            {
+                editTime[i]->setVisible(true);
+                curveName->button(i)->setVisible(true);
+                curveName->button(i)->setChecked(false);
+                QString strs = QString::number(i+1)+". "+data_reader[index].Track_Info[i];
+                curveName->button(i)->setText(strs);
+                editData[i]->setVisible(true);
+                btnColor->button(i)->setVisible(true);
+                QPalette pal = btnColor->button(i)->palette();
+                pal.setColor(QPalette::Button,color[i]);
+                btnColor->button(i)->setPalette(pal);
+                btnColor->button(i)->setAutoFillBackground(true);
+                editTime[i]->setEnabled(false);
+                editData[i]->setEnabled(false);
+                currentPage[index]->graph(i)->setVisible(false);
+            }
+        }
+        currentPage[index]->replot();
+        ui->scrollAreaWidgetContents->setMinimumHeight(30*data_reader[index].numOfDataGroup);
+        break;
+    }
+    }
 }
 
 void CurveFont::TDTupdateTrack(int index)
@@ -1091,6 +1202,14 @@ void CurveFont::TDTupdateTrack(int index)
         TDT_TrackUpdate[index].insert(10,false);
         TDT_TrackUpdate[index].insert(11,false);
     }
+}
+
+void CurveFont::SDRupdateTrack(int index)
+{
+    SDR_TrackUpdate[index].insert(0,false);
+    SDR_TrackUpdate[index].insert(1,true);
+    SDR_TrackUpdate[index].insert(2,false);
+    SDR_TrackUpdate[index].insert(3,true);
 }
 
 void CurveFont::on_checkBox_1_clicked()
@@ -2006,7 +2125,7 @@ void CurveFont::on_actionSave_triggered()
         dateTime_.setTime(time_);
         QString strs = "";
         //        QTime frequency(0,0,0);
-//        QString strs_ = "";
+        //        QString strs_ = "";
         int DATAFREQUENCY = data_reader[cnt].dataFrequency;
         long bit = 0;
         for(int k=0 ; k<num ; k++)
@@ -2017,7 +2136,7 @@ void CurveFont::on_actionSave_triggered()
             qDebug()<<SavePath[k];
             if(file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
             {
-//                qDebug()<<3;
+                //                qDebug()<<3;
                 QTextStream in(&file);
                 in<<"文件路径："<<","<<data_reader[cnt].getFilePath()<<'\n';
                 if(data_reader[cnt].haveStratTime==true)
@@ -2078,7 +2197,7 @@ void CurveFont::on_actionSave_triggered()
                     }
                     in<<'\n';
                 }
-//                qDebug()<<1;
+                //                qDebug()<<1;
                 file.close();
             }
             mutex.unlock();
@@ -2166,6 +2285,8 @@ void CurveFont::on_actionReset_triggered()
     int cnt = ui->tabWidget->currentIndex();
     currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
     currentPage[cnt]->yAxis2->setRange(0,100);
+    currentPage[cnt]->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
+    currentPage[cnt]->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
     if(isHMS==true)
     {
         currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);
@@ -2234,7 +2355,7 @@ void CurveFont::on_actionHistoryFile0_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2311,7 +2432,7 @@ void CurveFont::on_actionHistoryFile1_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2388,7 +2509,7 @@ void CurveFont::on_actionHistoryFile2_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2465,7 +2586,7 @@ void CurveFont::on_actionHistoryFile3_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2542,7 +2663,7 @@ void CurveFont::on_actionHistoryFile4_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2618,7 +2739,7 @@ void CurveFont::on_actionHistoryFile5_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2695,7 +2816,7 @@ void CurveFont::on_actionHistoryFile6_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2772,7 +2893,7 @@ void CurveFont::on_actionHistoryFile7_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2849,7 +2970,7 @@ void CurveFont::on_actionHistoryFile8_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);
@@ -2926,7 +3047,7 @@ void CurveFont::on_actionHistoryFile9_triggered()
         tracerLabel->setPositionAlignment(Qt::AlignLeft | Qt::AlignTop);
         tracerLabel->setFont(QFont(font().family(),6));                   //字体大小
         tracerLabel->setPadding(QMargins(1,1,1,1));                        //文字距离边框几个像素
-//        tracerLabel->position->setParentAnchor(0);
+        //        tracerLabel->position->setParentAnchor(0);
         connect(currentPage[0],SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(mousemove(QMouseEvent*)));
         currentPage[0]->replot();
         showTrack(0);

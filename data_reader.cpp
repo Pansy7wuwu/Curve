@@ -1158,6 +1158,12 @@ void Data_Reader::dealType1()
                 }
             }
         }
+        startTime[0] = Processed_Time.value(0);
+        startTime[1] = Processed_Time.value(1);
+        startTime[2] = Processed_Time.value(2);
+        startTime[3] = Processed_Time.value(3);
+        startTime[4] = Processed_Time.value(4);
+        startTime[5] = Processed_Time.value(5);
         break;
     }
     case 1:
@@ -1270,6 +1276,12 @@ void Data_Reader::dealType1()
                 }
             }
         }
+        startTime[0] = Processed_Time.value(0);
+        startTime[1] = Processed_Time.value(1);
+        startTime[2] = Processed_Time.value(2);
+        startTime[3] = Processed_Time.value(3);
+        startTime[4] = Processed_Time.value(4);
+        startTime[5] = Processed_Time.value(5);
         break;
     }
     case 2:
@@ -1382,6 +1394,12 @@ void Data_Reader::dealType1()
                 }
             }
         }
+        startTime[0] = Processed_Time.value(0);
+        startTime[1] = Processed_Time.value(1);
+        startTime[2] = Processed_Time.value(2);
+        startTime[3] = Processed_Time.value(3);
+        startTime[4] = Processed_Time.value(4);
+        startTime[5] = Processed_Time.value(5);
         break;
     }
     case 3:
@@ -1741,17 +1759,17 @@ void Data_Reader::dealType4()
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    relitydata = actualdata/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    relitydata = actualdata/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    relitydata = actualdata/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                 }
                 break;
@@ -1762,7 +1780,7 @@ void Data_Reader::dealType4()
     case 1:
     {
         YAxis_1 = "Temperature(°C)";
-        YAxis_2 = "Humidity(RH%)/Irradiance(%)";
+        YAxis_2 = "Humidity(RH%)";
         //Y轴内容
         numOfYAxis = 2;
         YAxis_Info = new QString[3];
@@ -1776,8 +1794,8 @@ void Data_Reader::dealType4()
         Track_Info[1] = "Temperature PV(°C)";
         Track_Info[2] = "Humidity SV(RH%)";
         Track_Info[3] = "Humidity PV(RH%)";
-        Track_Info[4] = "SunShine SV(W/m^2)";
-        Track_Info[5] = "SunShine PV(W/m^2)";
+        Track_Info[4] = "SunShine SV(W/M^2)";
+        Track_Info[5] = "SunShine PV(W/M^2)";
         Track_Info[6] = "BlkTemp SV(°C)";
         Track_Info[7] = "BlkTemp PV(°C)";
         Track_Info[8] = "Temp PID(%)";
@@ -1876,22 +1894,22 @@ void Data_Reader::dealType4()
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0;
+            relitydata = actualdata/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0;
+            relitydata = actualdata/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0;
+            relitydata = actualdata/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0;
+            relitydata = actualdata/10*1.0;
             Processed_Data.insert(index++,relitydata);
         }
         break;

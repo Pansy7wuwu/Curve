@@ -43,6 +43,7 @@ public:
     QVector<double> NOW;
     bool isHMS=false;
     QVector<QMap<int , bool>> TDT_TrackUpdate;
+    QVector<QMap<int , bool>> SDR_TrackUpdate;
 
     void closeEvent(QCloseEvent* event);
     void updateHistoryFile();
@@ -50,6 +51,7 @@ public:
     void showTrack(int);
     void hideTrack();
     void TDTupdateTrack(int);
+    void SDRupdateTrack(int);
 
 
 public slots:

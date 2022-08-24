@@ -6,7 +6,7 @@
     <message>
         <location filename="curvefont.ui" line="14"/>
         <source>CurveFont</source>
-        <translation type="unfinished">Temak曲綫軟件 v1.1</translation>
+        <translation>Temak曲綫軟件 v1.5</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="71"/>

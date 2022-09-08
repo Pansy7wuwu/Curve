@@ -43,6 +43,7 @@ public:
     QString YAxis_1 = "";
     QString YAxis_2 = "";
     int TDTType;
+    int* Y_Choose;
 
     void setFilePath(QString);//设置文件路径
     QString getFilePath();

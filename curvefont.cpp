@@ -618,6 +618,8 @@ void CurveFont::draw()
         Page->yAxis->setLabel("Temperature(°C)");
         Page->yAxis2->setVisible(true);
         Page->yAxis2->setLabel("Humidity(RH%)");
+        Page->axisRect()->addAxis(QCPAxis::atRight);
+        Page->axisRect()->axis(QCPAxis::atRight,1)->setVisible(false);
         Page->addGraph(Page->xAxis,Page->yAxis);
         Page->addGraph(Page->xAxis,Page->yAxis);
         Page->addGraph(Page->xAxis,Page->yAxis2);
@@ -782,74 +784,48 @@ void CurveFont::draw()
         Page->yAxis->setLabel(data_reader[numOfPage-1].YAxis_1);
         Page->yAxis2->setVisible(true);
         Page->yAxis2->setLabel(data_reader[numOfPage-1].YAxis_2);
+        Page->axisRect()->addAxis(QCPAxis::atRight);
+        Page->axisRect()->axis(QCPAxis::atRight,0)->setPadding(1);
+        Page->axisRect()->axis(QCPAxis::atRight,0)->setLabelPadding(0);
+        Page->axisRect()->axis(QCPAxis::atRight,1)->setPadding(1);
+        Page->axisRect()->axis(QCPAxis::atRight,1)->setLabelPadding(0);
+        Page->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1500);
+        Page->axisRect()->axis(QCPAxis::atRight,1)->setLabel("Irradiance(%)");
         if(data_reader[numOfPage-1].numOfDataGroup==7)
         {
-            Page->axisRect()->addAxis(QCPAxis::atRight);
-            Page->axisRect()->addAxis(QCPAxis::atLeft);
-            Page->axisRect()->addAxes(QCPAxis::atRight);
-            Page->axisRect()->axis(QCPAxis::atRight,0)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,0)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabel("SunShine(W/M^2)");
-            Page->axisRect()->axis(QCPAxis::atLeft,0)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atLeft,0)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabel("BlkTemp(°C)");
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabel("PID(%)");
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setRange(0,100);
             Page->axisRect()->axis(QCPAxis::atRight,1)->setVisible(false);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setVisible(false);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setVisible(false);
-            Page->addGraph(Page->xAxis,Page->yAxis);
-            Page->addGraph(Page->xAxis,Page->yAxis);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
+            for(int j=0 ; j<7 ; j++)
+            {
+                if(data_reader[numOfPage-1].Y_Choose[j]==0)
+                {
+                    Page->addGraph(Page->xAxis,Page->yAxis);
+                }
+                else
+                {
+                    Page->addGraph(Page->xAxis,Page->yAxis2);
+                }
+            }
         }
         else if(data_reader[numOfPage-1].numOfDataGroup==12)
         {
-            Page->axisRect()->addAxis(QCPAxis::atRight);
-            Page->axisRect()->addAxis(QCPAxis::atLeft);
-            Page->axisRect()->addAxes(QCPAxis::atRight);
-            Page->axisRect()->axis(QCPAxis::atRight,0)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,0)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
-            Page->axisRect()->axis(QCPAxis::atRight,1)->setLabel("SunShine(W/M^2)");
-            Page->axisRect()->axis(QCPAxis::atLeft,0)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atLeft,0)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setLabel("BlkTemp(°C)");
-            Page->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setPadding(1);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabelPadding(0);
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setLabel("PID(%)");
-            Page->axisRect()->axis(QCPAxis::atRight,2)->setRange(0,100);
-            Page->addGraph(Page->xAxis,Page->yAxis);
-            Page->addGraph(Page->xAxis,Page->yAxis);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->yAxis2);
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atLeft,1));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atLeft,1));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
-            Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,2));
+            for(int j=0 ; j<12 ; j++)
+            {
+                if(data_reader[numOfPage-1].Y_Choose[j]==0)
+                {
+                    Page->addGraph(Page->xAxis,Page->yAxis);
+                }
+                else if(data_reader[numOfPage-1].Y_Choose[j]==1)
+                {
+                    Page->addGraph(Page->xAxis,Page->yAxis2);
+                }
+                else
+                {
+                    Page->addGraph(Page->xAxis,Page->axisRect()->axis(QCPAxis::atRight,1));
+                }
+            }
         }
         QList<QCPAxis*> axes;
-        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis<<Page->axisRect()->axis(QCPAxis::atRight,1)<<Page->axisRect()->axis(QCPAxis::atLeft,1);
+        axes << Page->yAxis2 << Page->xAxis2 << Page->yAxis << Page->xAxis<<Page->axisRect()->axis(QCPAxis::atRight,1);
         Page->axisRect()->setRangeZoomAxes(axes);
         Page->axisRect()->setRangeDragAxes(axes);
         Data[numOfPage-1].resize(data_reader[numOfPage-1].numOfDataGroup);
@@ -2285,8 +2261,7 @@ void CurveFont::on_actionReset_triggered()
     int cnt = ui->tabWidget->currentIndex();
     currentPage[cnt]->yAxis->setRange(min[cnt],max[cnt]);
     currentPage[cnt]->yAxis2->setRange(0,100);
-    currentPage[cnt]->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1200);
-    currentPage[cnt]->axisRect()->axis(QCPAxis::atLeft,1)->setRange(-75,175);
+    currentPage[cnt]->axisRect()->axis(QCPAxis::atRight,1)->setRange(0,1500);
     if(isHMS==true)
     {
         currentPage[cnt]->xAxis->setRange(TimeHMS[cnt][0],TimeHMS[cnt][(TimeHMS[cnt].size()-1)]);

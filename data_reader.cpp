@@ -1603,13 +1603,16 @@ void Data_Reader::judgeTDTType()
 {
     if(map.isEmpty())
         readToMap();
-    int bit128,bit130;
+    int bit128,bit130,bit48;
+    bit48 = map.value(48);
     bit128 = map.value(128);
     bit130 = map.value(130);
-    if(bit128 == 2 && bit130 ==7)
+    if(bit128 == 2 && bit130 == 7 && bit48 == 0)
         TDTType = 0;
-    else if(bit128 == 3 && bit130 == 12)
+    else if(bit128 == 3 && bit130 == 12 && bit48 == 1)
         TDTType = 1;
+    else if(bit128 == 2 && bit130 == 7 && bit48 == 1)
+        TDTType = 2;
 }
 
 void Data_Reader::dealType4()
@@ -1629,15 +1632,38 @@ void Data_Reader::dealType4()
         YAxis_Info[0] = "Temperture(°C)";
         YAxis_Info[1] = "Humidity(RH%)";
         //数据组数
+        Y_Choose = new int[7];
+        Y_Choose[0] = map.value(298);
+        Y_Choose[1] = map.value(330);
+        Y_Choose[2] = map.value(362);
+        Y_Choose[3] = map.value(394);
+        Y_Choose[4] = map.value(426);
+        Y_Choose[5] = map.value(458);
+        Y_Choose[6] = map.value(490);
         numOfDataGroup = 7;
+        int Track_bit=304;
         Track_Info = new QString[numOfDataGroup];
-        Track_Info[0] = "Temperature SV(°C)";
-        Track_Info[1] = "Temperature PV(°C)";
-        Track_Info[2] = "Humidity SV(RH%)";
-        Track_Info[3] = "Humidity PV(RH%)";
-        Track_Info[4] = "Temp PID(%)";
-        Track_Info[5] = "Humi PID(%)";
-        Track_Info[6] = "Svr PID(%)";
+        for(int i=0; i<7 ;i++)
+        {
+            QString Track="";
+            int count=0;
+            while(1)
+            {
+                if(count==14&&i<6)
+                {
+                    break;
+                }
+                else if(i==6&&count==12)
+                {
+                    break;
+                }
+                Track+=(QChar)map.value(Track_bit);
+                Track_bit++;
+                count++;
+            }
+            Track_bit+=18;
+            Track_Info[i]=Track;
+        }
         //获取时间
         haveStratTime = true;
         short year[2];
@@ -1695,37 +1721,58 @@ void Data_Reader::dealType4()
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/100*1.0;
+                    if(Y_Choose[0]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/100*1.0;
+                    if(Y_Choose[1]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/10*1.0;
+                    if(Y_Choose[2]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/10*1.0;
+                    if(Y_Choose[3]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    if(Y_Choose[4]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    if(Y_Choose[5]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0;
+                    if(Y_Choose[6]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                 }
                 bit+=8;
@@ -1739,37 +1786,58 @@ void Data_Reader::dealType4()
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/100*1.0;
+                    if(Y_Choose[0]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/100*1.0;
+                    if(Y_Choose[1]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/10*1.0;
+                    if(Y_Choose[2]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata*1.0/10*1.0;
+                    if(Y_Choose[3]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata/10*1.0;
+                    if(Y_Choose[4]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata/10*1.0;
+                    if(Y_Choose[5]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                     dataTemp[0] = map.value(bit++);
                     dataTemp[1] = map.value(bit++);
                     actualdata = (dataTemp[1]<<8)+dataTemp[0];
-                    relitydata = actualdata/10*1.0;
+                    if(Y_Choose[6]==0)
+                        relitydata = actualdata*1.0/100*1.0;
+                    else
+                        relitydata = actualdata*1.0/10*1.0;
                     Processed_Data.insert(index++,relitydata);
                 }
                 break;
@@ -1782,26 +1850,45 @@ void Data_Reader::dealType4()
         YAxis_1 = "Temperature(°C)";
         YAxis_2 = "Humidity(RH%)";
         //Y轴内容
-        numOfYAxis = 2;
+        numOfYAxis = 3;
         YAxis_Info = new QString[3];
         YAxis_Info[0] = "Temperture(°C)";
         YAxis_Info[1] = "Humidity(RH%)";
         YAxis_Info[2] = "Irradiance(%)";
         //数据组数
         numOfDataGroup = 12;
+        Y_Choose = new int[12];
+        Y_Choose[0] = map.value(362);
+        Y_Choose[1] = map.value(394);
+        Y_Choose[2] = map.value(426);
+        Y_Choose[3] = map.value(458);
+        Y_Choose[4] = map.value(490);
+        Y_Choose[5] = map.value(522);
+        Y_Choose[6] = map.value(554);
+        Y_Choose[7] = map.value(586);
+        Y_Choose[8] = map.value(618);
+        Y_Choose[9] = map.value(650);
+        Y_Choose[10] = map.value(682);
+        Y_Choose[11] = map.value(714);
         Track_Info = new QString[numOfDataGroup];
-        Track_Info[0] = "Temperature SV(°C)";
-        Track_Info[1] = "Temperature PV(°C)";
-        Track_Info[2] = "Humidity SV(RH%)";
-        Track_Info[3] = "Humidity PV(RH%)";
-        Track_Info[4] = "SunShine SV(W/M^2)";
-        Track_Info[5] = "SunShine PV(W/M^2)";
-        Track_Info[6] = "BlkTemp SV(°C)";
-        Track_Info[7] = "BlkTemp PV(°C)";
-        Track_Info[8] = "Temp PID(%)";
-        Track_Info[9] = "Humi PID(%)";
-        Track_Info[10] = "Svr PID(%)";
-        Track_Info[11] = "Sun PID(%)";
+        int Track_bit=368;
+        for(int i=0; i<12 ;i++)
+        {
+            QString Track="";
+            int count=0;
+            while(1)
+            {
+                if(count==14)
+                {
+                    break;
+                }
+                Track+=(QChar)map.value(Track_bit);
+                Track_bit++;
+                count++;
+            }
+            Track_bit+=18;
+            Track_Info[i]=Track;
+        }
         //获取时间
         haveStratTime = true;
         short year[2];
@@ -1854,62 +1941,244 @@ void Data_Reader::dealType4()
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/100*1.0;
+            if(Y_Choose[0]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/100*1.0;
+            if(Y_Choose[1]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[2]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[3]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[4]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[5]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[6]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata*1.0/10*1.0;
+            if(Y_Choose[7]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata/10*1.0;
+            if(Y_Choose[8]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata/10*1.0;
+            if(Y_Choose[9]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata/10*1.0;
+            if(Y_Choose[10]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
             dataTemp[0] = map.value(bit++);
             dataTemp[1] = map.value(bit++);
             actualdata = (dataTemp[1]<<8)+dataTemp[0];
-            relitydata = actualdata/10*1.0;
+            if(Y_Choose[2]==11)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+        }
+        break;
+    }
+    case 2:
+    {
+        YAxis_1 = "Temperature(°C)";
+        YAxis_2 = "Humidity(RH%)";
+        //Y轴内容
+        numOfYAxis = 2;
+        YAxis_Info = new QString[2];
+        YAxis_Info[0] = "Temperture(°C)";
+        YAxis_Info[1] = "Humidity(RH%)";
+        //数据组数
+        Y_Choose = new int[7];
+        Y_Choose[0] = map.value(298);
+        Y_Choose[1] = map.value(330);
+        Y_Choose[2] = map.value(362);
+        Y_Choose[3] = map.value(394);
+        Y_Choose[4] = map.value(426);
+        Y_Choose[5] = map.value(458);
+        Y_Choose[6] = map.value(490);
+        numOfDataGroup = 7;
+        int Track_bit=304;
+        Track_Info = new QString[numOfDataGroup];
+        for(int i=0; i<7 ;i++)
+        {
+            QString Track="";
+            int count=0;
+            while(1)
+            {
+                if(count==14)
+                {
+                    break;
+                }
+                Track+=(QChar)map.value(Track_bit);
+                Track_bit++;
+                count++;
+            }
+            Track_bit+=18;
+            Track_Info[i]=Track;
+        }
+        //获取时间
+        haveStratTime = true;
+        short year[2];
+        year[0] = map.value(16);
+        year[1] = map.value(17);
+        startTime[0] = (year[1]<<8)+year[0];
+        startTime[1] = map.value(18);
+        startTime[2] = map.value(19);
+        startTime[3] = map.value(20);
+        startTime[4] = map.value(21);
+        startTime[5] = map.value(22);
+        //Y轴最大值
+        int temp[4];
+        temp[0] = map.value(208);
+        temp[1] = map.value(209);
+        temp[2] = map.value(210);
+        temp[3] = map.value(211);
+        TDT_Y_MAX = (temp[3]<<24)+(temp[2]<<16)+(temp[1]<<8)+temp[0];
+        //Y轴最小值
+        int temp_[4];
+        temp_[0] = map.value(212);
+        temp_[1] = map.value(213);
+        temp_[2] = map.value(214);
+        temp_[3] = map.value(215);
+        TDT_Y_MIN = (temp_[3]<<24)+(temp_[2]<<16)+(temp_[1]<<8)+temp_[0];
+        //数据倍数
+        int _temp[4];
+        _temp[0] = map.value(216);
+        _temp[1] = map.value(217);
+        _temp[2] = map.value(218);
+        _temp[3] = map.value(219);
+        TDT_Multiple = (_temp[3]<<24)+(_temp[2]<<16)+(_temp[1]<<8)+_temp[0];
+        TDT_Y_MAX /=TDT_Multiple;
+        TDT_Y_MIN /=TDT_Multiple;
+        //获取数据频率
+        dataFrequency = map.value(23);
+        //解析数据
+        int bit = startBit;
+        short dataTemp[2];
+        QMap<long long,int>::Iterator iter = map.end();
+        iter--;
+        short actualdata;
+        float relitydata;
+        int index = 0;
+        int index_ = 0;
+        while(bit<=iter.key())
+        {
+            Processed_Time.insert(index_,dataFrequency*index_);
+            index_++;
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[0]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[1]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[2]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[3]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[4]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[5]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
+            Processed_Data.insert(index++,relitydata);
+            dataTemp[0] = map.value(bit++);
+            dataTemp[1] = map.value(bit++);
+            actualdata = (dataTemp[1]<<8)+dataTemp[0];
+            if(Y_Choose[6]==0)
+                relitydata = actualdata*1.0/100*1.0;
+            else
+                relitydata = actualdata*1.0/10*1.0;
             Processed_Data.insert(index++,relitydata);
         }
         break;

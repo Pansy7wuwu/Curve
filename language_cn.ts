@@ -7,7 +7,7 @@
         <location filename="curvefont.ui" line="14"/>
         <source>CurveFont</source>
         <translatorcomment>曲线软件</translatorcomment>
-        <translation>Temak曲线软件 v1.5</translation>
+        <translation>Temak曲线软件 v1.6</translation>
     </message>
     <message>
         <location filename="curvefont.ui" line="71"/>
